@@ -3,27 +3,29 @@ package ajedrez;
 import java.util.LinkedList;
 
 public abstract class Piezas {
-	public boolean alive;
+	public boolean isAlive;
 	public boolean isWhite;
-	public boolean limitedMove;
+	public boolean notLimited;
+	Coordenadas posicion;
 	
-	public Piezas(boolean isWhite, boolean limitedMove) {
-		this.alive = true;
+	public Piezas(boolean isWhite, boolean notLimited, int x, int y) {
+		this.isAlive = true;
 		this.isWhite = isWhite;
-		this.limitedMove = limitedMove;
+		this.notLimited = notLimited;
+		this.posicion = new Coordenadas(x, y);
 	}
 	
 	public abstract int[][] allowedMove();
 	
-	public abstract char draw();
+	public abstract String toString();
 }
 
 class Peon extends Piezas {
 	public boolean canAttack;
 	public boolean firstMove;
 	
-	public Peon(boolean isBlanca) {
-		super(isBlanca, true);
+	public Peon(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 		this.canAttack = false;
 		this.firstMove = true;
 	}
@@ -44,14 +46,14 @@ class Peon extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2659':'\u265F';
+	public String toString() {
+		return this.isWhite?"\u2659":"\u265F";
 	}
 }
 
 class Torre extends Piezas {
-	public Torre(boolean isBlanca) {
-		super(isBlanca, false);
+	public Torre(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 	}
 	
 	@Override
@@ -60,14 +62,14 @@ class Torre extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2656':'\u265C';
+	public String toString() {
+		return this.isWhite?"\u2656":"\u265C";
 	}
 }
 
 class Caballo extends Piezas {
-	public Caballo(boolean isBlanca) {
-		super(isBlanca, true);
+	public Caballo(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 	}
 
 	@Override
@@ -77,14 +79,14 @@ class Caballo extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2658':'\u265E';
+	public String toString() {
+		return this.isWhite?"\u2658":"\u265E";
 	}
 }
 	
 class Alfil extends Piezas {
-	public Alfil(boolean isBlanca) {
-		super(isBlanca, false);
+	public Alfil(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 	}
 	
 	@Override
@@ -93,14 +95,14 @@ class Alfil extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2657':'\u265D';
+	public String toString() {
+		return this.isWhite?"\u2657":"\u265D";
 	}
 }
 
 class Reina extends Piezas {
-	public Reina(boolean isBlanca) {
-		super(isBlanca, false);
+	public Reina(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 	}
 
 	@Override
@@ -120,14 +122,14 @@ class Reina extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2655':'\u265B';
+	public String toString() {
+		return this.isWhite?"\u2655":"\u265B";
 	}
 }
 
 class Rey extends Piezas {
-	public Rey(boolean isBlanca) {
-		super(isBlanca, true);
+	public Rey(boolean isBlanca, int x, int y) {
+		super(isBlanca, true, x, y);
 	}
 
 	@Override
@@ -147,24 +149,7 @@ class Rey extends Piezas {
 	}
 
 	@Override
-	public char draw() {
-		return this.isWhite?'\u2654':'\u265A';
+	public String toString() {
+		return this.isWhite?"\u2654":"\u265A";
 	}
-}
-
-class Move extends Piezas {
-	public Move() {
-		super(true, true);
-	}
-
-	@Override
-	public int[][] allowedMove() {
-		return null;
-	}
-
-	@Override
-	public char draw() {
-		return 'X';
-	}
-	
 }

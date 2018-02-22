@@ -1,6 +1,5 @@
 package ajedrez;
 
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Controles {
@@ -56,9 +55,9 @@ public class Controles {
 //		}
 //	}
 	
-	public void moverPieza() {
-		int[] piezaOrigen = elegirPieza();
-	}
+//	public void moverPieza() {
+//		int[] piezaOrigen = elegirPieza();
+//	}
 	
 //	public boolean isCheckMate() {
 //		
