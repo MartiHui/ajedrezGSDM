@@ -42,10 +42,7 @@ public class Coordenadas {
 	}
 	
 	public Coordenadas addCoordenadas(Coordenadas c) {
-		Coordenadas total = new Coordenadas(this.coorX+c.coorX,
-				this.coorY+c.coorY);
-		if (total.dentroTablero()) return total;
-		else return null;
+		return new Coordenadas(this.coorX+c.coorX, this.coorY+c.coorY);
 	}
 	
 	public boolean dentroTablero() {

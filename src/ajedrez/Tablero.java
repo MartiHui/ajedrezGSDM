@@ -80,4 +80,23 @@ public class Tablero {
 	public Piezas getCasilla(Coordenadas coor) {
 		return this.tablero[coor.coorX][coor.coorY];
 	}
+	
+	public boolean isCheck(boolean isWhiteTurn) {
+		//Obtenemos la posición del rey a comprobar si esta en jaque
+		Coordenadas kingPosition = new Coordenadas(0, 0);
+		Coordenadas temp;
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				if (this.tablero[x][y].isWhite == isWhiteTurn &&
+						this.tablero[x][y] instanceof Rey) {
+					kingPosition = new Coordenadas(x, y);
+				}
+			}
+		}
+		
+		/*Recorremos el tablero y cuando encontremos una ficha del color
+		 * opuesto, miramos si entre sus movimientos posibles esta el rey
+		 */
+		
+	}
 }

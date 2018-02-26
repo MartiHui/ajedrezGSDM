@@ -28,7 +28,8 @@ public class Controles {
 		Coordenadas coorOrigen, coorDestino;
 		coorOrigen = elegirPieza();
 		Coordenadas[] legalMoves
-						= this.tablero.getCasilla(coorOrigen).legalMoves();
+						= this.tablero.getCasilla(coorOrigen)
+						.legalMoves(coorOrigen, tablero);
 		
 		return null;
 	}
