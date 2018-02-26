@@ -1,7 +1,5 @@
 package ajedrez;
 
-import java.util.LinkedList;
-
 public abstract class Piezas {
 	public boolean isAlive; //La ficha esta viva?
 	public boolean isWhite; //¿La ficha es blanca?
@@ -13,7 +11,7 @@ public abstract class Piezas {
 		this.moves = moves;
 	}
 	
-	public abstract Coordenadas[] legalMoves();
+	public abstract Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero);
 	
 	public abstract String toString();
 }
@@ -29,7 +27,7 @@ class Peon extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -49,7 +47,7 @@ class Torre extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -71,7 +69,7 @@ class Caballo extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -91,7 +89,7 @@ class Alfil extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -113,7 +111,7 @@ class Reina extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -135,7 +133,7 @@ class Rey extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves() {
+	public Coordenadas[] legalMoves(Coordenadas origen, Tablero tablero) {
 		// TODO Auto-generated method stub
 		return null;
 	}
