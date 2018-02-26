@@ -3,8 +3,8 @@ package ajedrez;
 import java.util.Scanner;
 
 public class Coordenadas {
-	public int coorX;
-	public int coorY;
+	public int coorX; //Coordenada horizontal (A-H)
+	public int coorY; //Coordenada vertical (1-8)
 	
 	public Coordenadas(int coorX, int coorY) {
 		this.coorX = coorX;
@@ -22,30 +22,47 @@ public class Coordenadas {
 		String input;
 		
 		System.out.println("Introduce las coordenadas. Primero la letra"
-				+ " y luego el número (ej.:A1): ");
+				+ " y luego el nï¿½mero (ej.:A1): ");
 		do {
 			try {
 				input = sc.nextLine().toUpperCase();
-				if (input.length() != 2) throw new Exception("Más de dos valores.");
+				if (input.length() != 2) throw new Exception("MÃ¡s de dos "
+						+ "valores.");
 				coorX = Character.getNumericValue(input.charAt(0)) - 10;
 				coorY = Character.getNumericValue(input.charAt(1) - 1);
 				if (0 > coorX || coorX > 7 || 0 > coorY || coorY > 7) 
 					throw new Exception("Fuera de rango.");
 				break;
 			} catch (Exception e) {
-				System.out.println("Coordenadas fuera de rango. Vuelve a intentarlo: ");
+				System.out.println("Coordenadas fuera de rango. Vuelve a "
+						+ "intentarlo: ");
 			}
 		} while (true);
 		sc.close();
 	}
 	
 	public Coordenadas addCoordenadas(Coordenadas c) {
-		Coordenadas total = new Coordenadas(this.coorX+c.coorX, this.coorY+c.coorY);
+		Coordenadas total = new Coordenadas(this.coorX+c.coorX,
+				this.coorY+c.coorY);
 		if (total.dentroTablero()) return total;
 		else return null;
 	}
 	
 	public boolean dentroTablero() {
-		return (0 <= this.coorX && this.coorX <= 7 && 0 <= this.coorY && this.coorY <= 7);
+		return (0 <= this.coorX && this.coorX <= 7 && 0 <= this.coorY &&
+				this.coorY <= 7);
+	}
+	
+	public boolean insideOf(Coordenadas[] coords) {
+		for (Coordenadas c: coords) {
+			if (this.coorX == c.coorX && this.coorY == c.coorY) return true;
+		}
+		
+		return false;
+	}
+	
+	public void setCoords(int x, int y) {
+		this.coorX = x;
+		this.coorY = y;
 	}
 }

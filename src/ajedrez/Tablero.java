@@ -1,8 +1,9 @@
 package ajedrez;
 
 public class Tablero {
-	public Piezas[][] tablero;
-	public String p1, p2;
+	public Piezas[][] tablero; //Tablero y piezas
+	public Piezas[][] piezasMuertas; //RIP
+	public String p1, p2; //Nombre de los jugadores
 	
 	public Tablero(String p1, String p2) {
 		this.tablero = new Piezas[8][8];
@@ -40,29 +41,43 @@ public class Tablero {
 		}
 	}
 	
-	public void printTablero() {
+	public void printTablero(Coordenadas[] legalMoves) {
+		Coordenadas coord = new Coordenadas(0, 0);
+		boolean specialSquare;
+		
 		System.out.println("  +-------------------------------+");
 		for (int coorY = 0; coorY < 8; coorY++) {
 			System.out.print((8-coorY) + " |");
 			for (int coorX = 0; coorX < 8; coorX++) {
-				System.out.print(" " + (this.tablero[coorX][coorY]==null?' ':this.tablero[coorX][coorY].draw()) + " |");
+				coord.setCoords(coorX,  coorY);
+				specialSquare = 
+						legalMoves!=null?coord.insideOf(legalMoves):false;
+				if (this.getCasilla(coord) == null) {
+					System.out.print(specialSquare?" X ":"   ");
+				} else {
+					if (specialSquare) {
+						System.out.print("[" + this.getCasilla(coord) + "]");
+					} else {
+						System.out.print(" " + this.getCasilla(coord) + " ");
+					}
+				}
+				System.out.print("|");
 				
 			}
 			System.out.println();
-			if (coorY != 7) System.out.println("  |---+---+---+---+---+---+---+---|");
+			if (coorY != 7) System.out.println
+			("  |---+---+---+---+---+---+---+---|");
 			
 		}
 		System.out.println("Y +-------------------------------+");
 		System.out.print("  X A   B   C   D   E   F   G   H");
 	}
-
-	public void clonarTablero(Tablero t) {
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				this.tablero[x][y] = t.tablero[x][y];
-			}
-		}
-		this.p1 = t.p1;
-		this.p2 = t.p2;
+	
+	public void printTablero() {
+		printTablero(null);
+	}
+	
+	public Piezas getCasilla(Coordenadas coor) {
+		return this.tablero[coor.coorX][coor.coorY];
 	}
 }
