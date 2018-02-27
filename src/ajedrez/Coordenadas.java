@@ -45,6 +45,10 @@ public class Coordenadas {
 		return new Coordenadas(this.coorX+c.coorX, this.coorY+c.coorY);
 	}
 	
+	public Coordenadas addCoordenadas(int x, int y) {
+		return this.addCoordenadas(new Coordenadas(x, y));
+	}
+	
 	public boolean dentroTablero() {
 		return (0 <= this.coorX && this.coorX <= 7 && 0 <= this.coorY &&
 				this.coorY <= 7);
@@ -61,5 +65,14 @@ public class Coordenadas {
 	public void setCoords(int x, int y) {
 		this.coorX = x;
 		this.coorY = y;
+	}
+	
+	public void setCoords(Coordenadas c) {
+		this.coorX = c.coorX;
+		this.coorY = c.coorY;
+	}
+	
+	public String toString() {
+		return "[" + this.coorX + ", " + this.coorY + "]";
 	}
 }

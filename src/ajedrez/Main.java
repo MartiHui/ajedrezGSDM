@@ -6,8 +6,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		Tablero t = new Tablero("as", "dsada");
-		t.printTablero();
-		Coordenadas[] x = new Coordenadas[10];
+		
+
+		for (Coordenadas x: t.getCasilla(new Coordenadas(5, 6)).legalMoves(t)) {
+			System.out.println(x);
+		}
+		t.printTablero(t.getCasilla(new Coordenadas(5, 6)).legalMoves(t));
 	}
 
 }

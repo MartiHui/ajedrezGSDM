@@ -29,7 +29,7 @@ public class Controles {
 		coorOrigen = elegirPieza();
 		Coordenadas[] legalMoves
 						= this.tablero.getCasilla(coorOrigen)
-						.legalMoves(coorOrigen, tablero);
+						.legalMoves(tablero);
 		
 		return null;
 	}
