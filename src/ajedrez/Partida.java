@@ -25,7 +25,8 @@ public class Partida {
 			
 			//Se comprueba si se ha hecho jaque o jaquemate al OPONENTE
 			if (this.tbl.isCheckMate(!this.ctrl.isWhiteTurn)) {
-				System.out.println("¡JAQUEMATE!");
+				this.tbl.printTablero(this.ctrl.isWhiteTurn);
+				System.out.println("ï¿½JAQUEMATE!");
 				System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador.");
 				play = false;
 			} else if (this.tbl.isCheck(!this.ctrl.isWhiteTurn)) {

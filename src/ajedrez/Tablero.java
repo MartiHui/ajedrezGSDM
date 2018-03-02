@@ -184,19 +184,13 @@ public class Tablero {
 	}
 	
 	public boolean isCheckMate(boolean isWhiteKing) {
-		//JAquemate en las posiciones actuales?
-		if (!this.isCheck(isWhiteKing)) return false;
-		//Probamos todas y cada una de los posibles movimientos. Si alguno evita el jaque-amte, return false
 		for (Piezas[] y: this.tablero) {
 			for (Piezas x: y) {
-				if (x != null) {
-					for (Coordenadas coor: x.legalMoves(this)) {
-						if (!this.possibleCheck(isWhiteKing, x.posicion, coor)) return false;
-					}
-				}
+				if (x != null && x.isWhite == isWhiteKing)
+					if (x.legalMoves(this).length > 0) return false;
 			}
 		}
-		//Si ninguna posibilidad ha evitado el jaquemate, return true;
+		
 		return true;
 	}
 }
