@@ -14,6 +14,8 @@ public abstract class Piezas {
 	public abstract Coordenadas[] legalMoves(Tablero tablero);
 	
 	public abstract String toString();
+	//La pieza puede matar al rey enemigo en el siguiente turno?
+	public abstract boolean canKillKing(Tablero tablero);
 	
 	public void moverPieza(Tablero tablero, Coordenadas destino) {
 		tablero.movePieza(this.posicion, destino);
@@ -83,6 +85,20 @@ class Peon extends Piezas {
 	public void promotion(Tablero tablero) {
 		tablero.setCasilla(this.posicion, new Reina(this.isWhite, this.posicion));
 	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		if (this.posicion.addCoordenadas(1, this.isWhite?1:-1).dentroTablero() &&
+				tablero.getCasilla(this.posicion.addCoordenadas(1, this.isWhite?1:-1)) instanceof Rey &&
+				tablero.getCasilla(this.posicion.addCoordenadas(1, this.isWhite?1:-1)).isWhite != this.isWhite)
+			return true;
+		if (this.posicion.addCoordenadas(-1, this.isWhite?1:-1).dentroTablero() &&
+				tablero.getCasilla(this.posicion.addCoordenadas(-1, this.isWhite?1:-1)) instanceof Rey &&
+				tablero.getCasilla(this.posicion.addCoordenadas(-1, this.isWhite?1:-1)).isWhite != this.isWhite)
+			return true;
+		
+		return false;
+	}
 }
 
 class Torre extends Piezas {
@@ -126,6 +142,27 @@ class Torre extends Piezas {
 		super.killPieza();
 		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
 	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(1, 0),
+				new Coordenadas(0, 1), new Coordenadas(-1, 0),
+				new Coordenadas(0, -1)};
+		Coordenadas temp;
+		
+		for (Coordenadas coor: moves) {
+			temp = new Coordenadas(this.posicion.coorX, this.posicion.coorY);
+			temp = temp.addCoordenadas(coor);
+			while (temp.dentroTablero() && tablero.getCasilla(temp) == null) {
+				temp = temp.addCoordenadas(coor);
+			}
+			if (temp.dentroTablero() && tablero.getCasilla(temp) instanceof Rey &&
+					tablero.getCasilla(temp).isWhite != this.isWhite)
+				return true;
+		}
+		
+		return false;
+	}
 }
 
 class Caballo extends Piezas {
@@ -164,6 +201,26 @@ class Caballo extends Piezas {
 	public void killPieza() {
 		super.killPieza();
 		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(2, 1),
+				new Coordenadas(2, -1), new Coordenadas(-2, 1),
+				new Coordenadas(-2, -1), new Coordenadas(-1, 2),
+				new Coordenadas(1, 2), new Coordenadas(-1, -2),
+				new Coordenadas(1, -2)
+		};
+		Coordenadas temp;
+		
+		for (Coordenadas coor: moves) {
+			temp = new Coordenadas(this.posicion.coorX, this.posicion.coorY);
+			temp = temp.addCoordenadas(coor);
+			if (temp.dentroTablero() && tablero.getCasilla(temp) instanceof Rey && tablero.getCasilla(temp).isWhite != this.isWhite)
+				return true;
+		}
+		
+		return false;
 	}
 }
 	
@@ -205,6 +262,27 @@ class Alfil extends Piezas {
 	public void killPieza() {
 		super.killPieza();
 		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(-1, 1),
+				new Coordenadas(1, 1), new Coordenadas(1, -1),
+				new Coordenadas(-1, -1)};
+		Coordenadas temp;
+		
+		for (Coordenadas coor: moves) {
+			temp = new Coordenadas(this.posicion.coorX, this.posicion.coorY);
+			temp = temp.addCoordenadas(coor);
+			while (temp.dentroTablero() && tablero.getCasilla(temp) == null) {
+				temp = temp.addCoordenadas(coor);
+			}
+			if (temp.dentroTablero() && tablero.getCasilla(temp) instanceof Rey &&
+					tablero.getCasilla(temp).isWhite != this.isWhite)
+				return true;
+		}
+		
+		return false;
 	}
 }
 
@@ -250,6 +328,29 @@ class Reina extends Piezas {
 		super.killPieza();
 		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
 	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(-1, 0),
+				new Coordenadas(1, 0), new Coordenadas(0, 1),
+				new Coordenadas(0, -1), new Coordenadas(1, 1),
+				new Coordenadas(-1, -1), new Coordenadas(1, -1),
+				new Coordenadas(-1, 1)};
+		Coordenadas temp;
+		
+		for (Coordenadas coor: moves) {
+			temp = new Coordenadas(this.posicion.coorX, this.posicion.coorY);
+			temp = temp.addCoordenadas(coor);
+			while (temp.dentroTablero() && tablero.getCasilla(temp) == null) {
+				temp = temp.addCoordenadas(coor);
+			}
+			if (temp.dentroTablero() && tablero.getCasilla(temp) instanceof Rey &&
+					tablero.getCasilla(temp).isWhite != this.isWhite)
+				return true;
+		}
+		
+		return false;
+	}
 }
 
 class Rey extends Piezas {
@@ -288,5 +389,10 @@ class Rey extends Piezas {
 	public void killPieza() {
 		super.killPieza();
 		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+	}
+
+	@Override
+	public boolean canKillKing(Tablero tablero) {
+		return false;
 	}
 }

@@ -4,13 +4,15 @@ import java.util.LinkedList;
 
 public class Tablero {
 	public Piezas[][] tablero; //Tablero y piezas
-	public LinkedList<Piezas> piezasMuertas; //RIP
+	public LinkedList<Piezas> piezasBlancasMuertas; //RIP
+	public LinkedList<Piezas> piezasNegrasMuertas;
 	public String p1, p2; //Nombre de los jugadores
 	
 	public Tablero(String p1, String p2) {
 		this.tablero = new Piezas[8][8];
 		startTablero();
-		this.piezasMuertas = new LinkedList<Piezas>();
+		this.piezasBlancasMuertas = new LinkedList<Piezas>();
+		this.piezasNegrasMuertas = new LinkedList<Piezas>();
 		this.p1 = p1;
 		this.p2 = p2;
 	}
@@ -44,17 +46,17 @@ public class Tablero {
 		}
 	}
 	
-	public void printTablero(Coordenadas[] legalMoves) {
+	public void printTablero(Coordenadas[] legalMoves, boolean isWhiteTurn) {
 		Coordenadas coord = new Coordenadas(0, 0);
 		boolean specialSquare;
 		
 		System.out.println("  +-------------------------------+");
-		for (int coorY = 0; coorY < 8; coorY++) {
-			System.out.print((8-coorY) + " |");
+		for (int coorY = 7; coorY > -1; coorY--) {
+			System.out.print((coorY+1) + " |");
 			for (int coorX = 0; coorX < 8; coorX++) {
 				coord.setCoords(coorX,  coorY);
 				specialSquare = 
-						legalMoves!=null?coord.insideOf(legalMoves):false;
+						legalMoves!=null?coord.insideOf(legalMoves):false; //legalMoves null -> siempre false
 				if (this.getCasilla(coord) == null) {
 					System.out.print(specialSquare?" X ":"   ");
 				} else {
@@ -67,17 +69,72 @@ public class Tablero {
 				System.out.print("|");
 				
 			}
+			switch (coorY) {
+			case 7:
+				System.out.print((isWhiteTurn?"    ":" -> ") + "Negras: " + this.p2);
+				break;
+			case 6:
+				System.out.print("    ");
+				for (Piezas p: this.piezasBlancasMuertas.subList(0, Math.min(this.piezasBlancasMuertas.size(), 5))) {
+					System.out.print(p);
+				}
+				break;
+			case 5:
+				System.out.print("    ");
+				if (this.piezasBlancasMuertas.size() > 5) {
+					for (Piezas p: this.piezasBlancasMuertas.subList(5, Math.min(this.piezasBlancasMuertas.size(), 10))) {
+						System.out.print(p);
+					}
+				}
+				break;
+			case 4:
+				System.out.print("    ");
+				if (this.piezasBlancasMuertas.size() > 10) {
+					for (Piezas p: this.piezasBlancasMuertas.subList(10, Math.min(this.piezasBlancasMuertas.size(), 15))) {
+						System.out.print(p);
+					}
+				}
+				break;
+			case 3:
+				System.out.print("    ");
+				if (this.piezasNegrasMuertas.size() > 10) {
+					for (Piezas p: this.piezasNegrasMuertas.subList(10, Math.min(this.piezasNegrasMuertas.size(), 15))) {
+						System.out.print(p);
+					}
+				}
+				break;
+			case 2:
+				System.out.print("    ");
+				if (this.piezasNegrasMuertas.size() > 5) {
+					for (Piezas p: this.piezasNegrasMuertas.subList(5, Math.min(this.piezasNegrasMuertas.size(), 10))) {
+						System.out.print(p);
+					}
+				}
+				break;
+			case 1:
+				System.out.print("    ");
+				for (Piezas p: this.piezasNegrasMuertas.subList(0, Math.min(this.piezasNegrasMuertas.size(), 5))) {
+					System.out.print(p);
+				}
+				break;
+			case 0:
+				System.out.print((isWhiteTurn?" -> ":"    ") + "Blancas: " + this.p1);
+				break;
+			default:
+				break;
+			}
 			System.out.println();
-			if (coorY != 7) System.out.println
+			if (coorY != 0) System.out.println
 			("  |---+---+---+---+---+---+---+---|");
 			
 		}
 		System.out.println("Y +-------------------------------+");
 		System.out.print("  X A   B   C   D   E   F   G   H");
+		System.out.println("\n");
 	}
 	
-	public void printTablero() {
-		printTablero(null);
+	public void printTablero(boolean isWhiteTurn) {
+		printTablero(null, isWhiteTurn);
 	}
 	
 	public Piezas getCasilla(Coordenadas coor) {
@@ -90,7 +147,11 @@ public class Tablero {
 	
 	public void movePieza(Coordenadas org, Coordenadas dst) {
 		if (this.getCasilla(dst) != null) {
-			this.piezasMuertas.add(this.getCasilla(dst));
+			if (this.getCasilla(dst).isWhite) {
+				this.piezasBlancasMuertas.add(this.getCasilla(dst));
+			} else {
+				this.piezasNegrasMuertas.add(this.getCasilla(dst));
+			}
 			this.getCasilla(dst).killPieza();
 		}
 		this.setCasilla(dst, this.getCasilla(org));
@@ -98,16 +159,10 @@ public class Tablero {
 	}
 	
 	public boolean isCheck(boolean isWhiteKing) {
-		Piezas obj = null;
 		for (Piezas[] y: tablero) {
 			for (Piezas x: y) {
-				if (x instanceof Rey && x.isWhite == isWhiteKing) obj = x;
-			}
-		}
-		
-		for (Piezas[] y: tablero) {
-			for (Piezas x: y) {
-				if (x.isWhite != isWhiteKing && obj.posicion.insideOf(x.legalMoves(this))) return true;
+				if (x != null && x.isWhite != isWhiteKing && x.canKillKing(this))
+					return true;
 			}
 		}
 		
@@ -134,10 +189,14 @@ public class Tablero {
 		//Probamos todas y cada una de los posibles movimientos. Si alguno evita el jaque-amte, return false
 		for (Piezas[] y: this.tablero) {
 			for (Piezas x: y) {
-				
+				if (x != null) {
+					for (Coordenadas coor: x.legalMoves(this)) {
+						if (!this.possibleCheck(isWhiteKing, x.posicion, coor)) return false;
+					}
+				}
 			}
 		}
-		
-		return false;
+		//Si ninguna posibilidad ha evitado el jaquemate, return true;
+		return true;
 	}
 }

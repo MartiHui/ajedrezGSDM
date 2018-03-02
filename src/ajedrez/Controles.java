@@ -1,36 +1,62 @@
 package ajedrez;
 
+import java.util.Scanner;
+
 public class Controles {
 	public Tablero tablero;
-	private boolean isWhiteTurn;
+	public boolean isWhiteTurn;
 	
 	public Controles(Tablero t) {
 		this.tablero = t;
 		this.isWhiteTurn = true;
 	}
 	
-	public Coordenadas elegirPieza() {
-		Coordenadas coorPieza;
+	public void changeTurn() {
+		this.isWhiteTurn = !this.isWhiteTurn;
+	}
+	
+	public Coordenadas elegirPieza(Scanner sc) {
+		Coordenadas origen;
 		
-		System.out.print("Elige una pieza. ");
+		System.out.println("Elige una pieza.");
 		do {
-			coorPieza = new Coordenadas();
-			if (this.tablero.getCasilla(coorPieza).isWhite
-				!= this.isWhiteTurn) {
-				System.out.println("Elige una pieza de tu color.");
-			} else break;
+			origen = new Coordenadas(sc);
+			if (this.tablero.getCasilla(origen) == null) {
+				System.out.println("No hay ninguna pieza en esta casilla.");
+				continue;
+			} else if (this.tablero.getCasilla(origen).isWhite != this.isWhiteTurn) {
+				System.out.println("Esta pieza no te pertenece.");
+				continue;
+			} else if (this.tablero.getCasilla(origen).legalMoves(this.tablero).length == 0) {
+				System.out.println("Esta pieza no tiene movimientos permitidos.");
+				continue;
+			} else {
+				break;
+			}
 		} while (true);
 		
-		return coorPieza;
+		return origen;
 	}
-
-	public Coordenadas elegirObjetivo() {
-		Coordenadas coorOrigen, coorDestino;
-		coorOrigen = elegirPieza();
-		Coordenadas[] legalMoves
-						= this.tablero.getCasilla(coorOrigen)
-						.legalMoves(tablero);
+	
+	public Coordenadas elegirDestino(Piezas p, Scanner sc) {
+		Coordenadas destino;
 		
-		return null;
+		this.tablero.printTablero(p.legalMoves(this.tablero), isWhiteTurn);
+		System.out.println("ELige la casilla a la que moverte");
+		do {
+			destino = new Coordenadas(sc);
+			if (!destino.insideOf(p.legalMoves(tablero)))
+				System.out.println("No puedes moverte a esa casilla.");
+			else
+				break;
+		} while (true);
+		
+		return destino;
+	}
+	
+	public void moverPieza(Scanner sc) {
+		Coordenadas org = this.elegirPieza(sc);
+		Coordenadas dst = this.elegirDestino(this.tablero.getCasilla(org), sc);
+		this.tablero.getCasilla(org).moverPieza(tablero, dst);
 	}
 }

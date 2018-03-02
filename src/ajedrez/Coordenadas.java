@@ -11,21 +11,20 @@ public class Coordenadas {
 		this.coorY = coorY;
 	}
 	
-	public Coordenadas() {
+	public Coordenadas(Scanner sc) {
 		this.coorX = 0;
 		this.coorY = 0;
-		getCoordenadas();
+		getCoordenadas(sc);
 	}
 	
-	public void getCoordenadas() {
-		Scanner sc = new Scanner(System.in);
+	public void getCoordenadas(Scanner sc) {
 		String input;
 		
 		System.out.println("Introduce las coordenadas. Primero la letra"
-				+ " y luego el nï¿½mero (ej.:A1): ");
+				+ " y luego el número (ej.:A1): ");
 		do {
 			try {
-				input = sc.nextLine().toUpperCase();
+				input = sc.nextLine();
 				if (input.length() != 2) throw new Exception("MÃ¡s de dos "
 						+ "valores.");
 				coorX = Character.getNumericValue(input.charAt(0)) - 10;
@@ -34,11 +33,9 @@ public class Coordenadas {
 					throw new Exception("Fuera de rango.");
 				break;
 			} catch (Exception e) {
-				System.out.println("Coordenadas fuera de rango. Vuelve a "
-						+ "intentarlo: ");
+				System.out.println("Formato incorrecto.");
 			}
 		} while (true);
-		sc.close();
 	}
 	
 	public Coordenadas addCoordenadas(Coordenadas c) {
