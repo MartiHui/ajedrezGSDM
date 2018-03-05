@@ -190,7 +190,37 @@ public class Tablero {
 					if (x.legalMoves(this).length > 0) return false;
 			}
 		}
-		
+		//Si no puede moverse y esta en jaque, es jaquemate
+		if (this.isCheck(isWhiteKing)) return true;
+		//Si no puede moverse pero no esta en jaque, es empate
+		return false;
+	}
+	
+	public boolean isStalemate(boolean isWhiteKing) {
+		for (Piezas[] y: this.tablero) {
+			for (Piezas x: y) {
+				if (x != null && x.isWhite == isWhiteKing)
+					if (x.legalMoves(this).length > 0) return false;
+			}
+		}
+		//Si no puede moverse y esta en jaque, es jaquemate
+		if (this.isCheck(isWhiteKing)) return false;
+		//Si no puede moverse pero no esta en jaque, es empate
 		return true;
+	}
+	
+	public boolean impossibleCheckmate() {
+		/*Rey vs Rey
+		 * Rey y Alfil vs Rey
+		 * Rey y Caballo vs Rey
+		 */
+		LinkedList<Coordenadas> piezas = new LinkedList<Coordenadas>();
+		for (Piezas[] y: this.tablero) {
+			for (Piezas x: y) {
+				if (x != null) piezas.add(x.posicion);
+			}
+		}
+		
+		return false;
 	}
 }

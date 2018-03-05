@@ -102,8 +102,11 @@ class Peon extends Piezas {
 }
 
 class Torre extends Piezas {
+	public boolean originalPosition;
+	
 	public Torre(boolean isBlanca, Coordenadas posicion) {
 		super(isBlanca, posicion);
+		this.originalPosition = true;
 	}
 
 	@Override
@@ -162,6 +165,12 @@ class Torre extends Piezas {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public void moverPieza(Tablero tablero, Coordenadas destino) {
+		if (this.originalPosition) this.originalPosition = false;
+		super.moverPieza(tablero, destino);
 	}
 }
 
@@ -354,8 +363,11 @@ class Reina extends Piezas {
 }
 
 class Rey extends Piezas {
+	public boolean originalPosition;
+	
 	public Rey(boolean isBlanca, Coordenadas posicion) {
 		super(isBlanca, posicion);
+		this.originalPosition = true;
 	}
 
 	@Override
@@ -381,6 +393,7 @@ class Rey extends Piezas {
 				if (!tablero.possibleCheck(this.isWhite, this.posicion, temp))
 					posiciones.add(temp);
 		}
+		//Enroque
 		
 		return posiciones.toArray(new Coordenadas[posiciones.size()]);
 	}
@@ -393,6 +406,13 @@ class Rey extends Piezas {
 
 	@Override
 	public boolean canKillKing(Tablero tablero) {
+		//Un rey nunca puede matar a otro rey
 		return false;
+	}
+	
+	@Override
+	public void moverPieza(Tablero tablero, Coordenadas destino) {
+		if (this.originalPosition) this.originalPosition = false;
+		super.moverPieza(tablero, destino);
 	}
 }
