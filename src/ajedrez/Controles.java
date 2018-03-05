@@ -18,10 +18,12 @@ public class Controles {
 	public Coordenadas elegirPieza(Scanner sc) {
 		Coordenadas origen;
 		
-		System.out.println("Elige una pieza.");
+		System.out.println("Elige una pieza. Si no introduces ninguna coordenada, abrirás las opciones de jugador.");
 		do {
 			origen = new Coordenadas(sc);
-			if (this.tablero.getCasilla(origen) == null) {
+			if (origen.isEmpty()) {
+				return null;
+			} else if (this.tablero.getCasilla(origen) == null) {
 				System.out.println("No hay ninguna pieza en esta casilla.");
 				continue;
 			} else if (this.tablero.getCasilla(origen).isWhite != this.isWhiteTurn) {
@@ -42,10 +44,12 @@ public class Controles {
 		Coordenadas destino;
 		
 		this.tablero.printTablero(p.legalMoves(this.tablero), isWhiteTurn);
-		System.out.println("ELige la casilla a la que moverte");
+		System.out.println("ELige la casilla a la que moverte. Si no introduces ninguna coordenada, podrás elegir una pieza diferente.");
 		do {
 			destino = new Coordenadas(sc);
-			if (!destino.insideOf(p.legalMoves(tablero)))
+			if (destino.isEmpty()) {
+				return null;
+			} else if (!destino.insideOf(p.legalMoves(tablero)))
 				System.out.println("No puedes moverte a esa casilla.");
 			else
 				break;
@@ -54,9 +58,21 @@ public class Controles {
 		return destino;
 	}
 	
-	public void moverPieza(Scanner sc) {
-		Coordenadas org = this.elegirPieza(sc);
-		Coordenadas dst = this.elegirDestino(this.tablero.getCasilla(org), sc);
-		this.tablero.getCasilla(org).moverPieza(tablero, dst);
+	public boolean moverPieza(Scanner sc) {
+		Coordenadas org = null;
+		Coordenadas dst = null;
+		do {
+			org = this.elegirPieza(sc);
+			if (org == null) break;
+			dst = this.elegirDestino(this.tablero.getCasilla(org), sc);
+			if (dst != null) break;
+			else this.tablero.printTablero(isWhiteTurn);
+		} while (true);
+		if (org == null) {
+			return false;
+		} else {
+			this.tablero.getCasilla(org).moverPieza(tablero, dst);
+			return true;
+		}
 	}
 }

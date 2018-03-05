@@ -25,12 +25,20 @@ public class Coordenadas {
 		do {
 			try {
 				input = sc.nextLine();
-				if (input.length() != 2) throw new Exception("Más de dos "
-						+ "valores.");
-				coorX = Character.getNumericValue(input.charAt(0)) - 10;
-				coorY = Character.getNumericValue(input.charAt(1) - 1);
-				if (0 > coorX || coorX > 7 || 0 > coorY || coorY > 7) 
-					throw new Exception("Fuera de rango.");
+				
+				if (input.length() == 0) {
+					this.coorX = -1;
+					this.coorY = -1;
+					break;
+				}
+				
+				if (input.length() != 2) throw new Exception();
+				
+				this.coorX = Character.getNumericValue(input.charAt(0)) - 10;
+				this.coorY = Character.getNumericValue(input.charAt(1) - 1);
+				
+				if (0 > this.coorX || this.coorX > 7 || 0 > this.coorY || this.coorY > 7) throw new Exception();
+				
 				break;
 			} catch (Exception e) {
 				System.out.println("Formato incorrecto.");
@@ -71,5 +79,9 @@ public class Coordenadas {
 	
 	public String toString() {
 		return "[" + this.coorX + ", " + this.coorY + "]";
+	}
+	
+	public boolean isEmpty() {
+		return (this.coorX == -1 && this.coorY == -1);
 	}
 }
