@@ -6,6 +6,7 @@ public class Partida {
 	Controles ctrl;
 	Tablero tbl;
 	int gameStatus; //1: jugar 0:empate -1:derrota
+	int numRondas;
 	
 	public Partida(Scanner sc) {
 		System.out.println("Set blanco. Nombre del jugador: ");
@@ -16,12 +17,15 @@ public class Partida {
 		this.tbl = new Tablero(p1, p2);
 		this.ctrl = new Controles(this.tbl);
 		this.gameStatus = 1;
+		this.numRondas = 0;
 	}
 	
 	public void jugar(Scanner sc) {
 		boolean moved, empate;
 		
 		do {
+			if (this.ctrl.isWhiteTurn) this.numRondas++;
+			
 			do {
 				this.tbl.printTablero(this.ctrl.isWhiteTurn);
 				moved = this.ctrl.moverPieza(sc);
@@ -74,15 +78,19 @@ public class Partida {
 			}
 		} while (this.gameStatus == 1);
 		
-		if (this.gameStatus == 0) 
+		if (this.gameStatus == 0) {
 			System.out.println("----------------EMPATE----------------"
-				+ "\nNingún jugador ha ganado."
-				+ "\n--------------------------------------");
-		else 
+					+ "\nNingún jugador ha ganado."
+					+ "\n--------------------------------------");
+		}
+			
+		else  {
 			System.out.println("--------------VICTORIA--------------\n" 
-							+ (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador"
-							+ "\n------------------------------------");
-		System.out.println("Partida acabada.");
+					+ (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador"
+					+ "\n------------------------------------");
+		}
+			
+		System.out.println("Partida acabada. Número de rondas:" + this.numRondas);
 	}
 	
 	public int menuJugador(Scanner sc) {
@@ -113,6 +121,21 @@ public class Partida {
 			opc = sc.nextLine();
 		} while (!opc.equalsIgnoreCase("Y") && !opc.equalsIgnoreCase("N"));
 		return opc.equalsIgnoreCase("Y");
+	}
+	
+	public boolean partidaAcabada() {
+		return this.gameStatus != 1;
+	}
+	
+	public String estadoPartida() {
+		if (this.gameStatus == 1) {
+			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  |  Ronda nº" + this.numRondas + ".");
+		} else if (this.gameStatus == 0) {
+			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  | EMPATE tras " + this.numRondas + " rondas.");
+		} else {
+			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
+					" tras " + this.numRondas + " rondas.");
+		}
 	}
 
 }
