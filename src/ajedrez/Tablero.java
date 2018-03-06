@@ -19,41 +19,45 @@ public class Tablero {
 	
 	private void startTablero() {
 		//Torres
-		tablero[0][0] = new Torre(true, new Coordenadas(0, 0));
-		tablero[7][0] = new Torre(true, new Coordenadas(7, 0));
-		tablero[0][7] = new Torre(false, new Coordenadas(0, 7));
-		tablero[7][7] = new Torre(false, new Coordenadas(7, 7));
+//		tablero[0][0] = new Torre(true, new Coordenadas(0, 0));
+//		tablero[7][0] = new Torre(true, new Coordenadas(7, 0));
+//		tablero[0][7] = new Torre(false, new Coordenadas(0, 7));
+//		tablero[7][7] = new Torre(false, new Coordenadas(7, 7));
 		//Caballos
-		tablero[1][0] = new Caballo(true, new Coordenadas(1, 0));
-		tablero[6][0] = new Caballo(true, new Coordenadas(6, 0));
-		tablero[1][7] = new Caballo(false, new Coordenadas(1, 7));
-		tablero[6][7] = new Caballo(false, new Coordenadas(6, 7));
+//		tablero[1][0] = new Caballo(true, new Coordenadas(1, 0));
+//		tablero[6][0] = new Caballo(true, new Coordenadas(6, 0));
+//		tablero[1][7] = new Caballo(false, new Coordenadas(1, 7));
+//		tablero[6][7] = new Caballo(false, new Coordenadas(6, 7));
 		//Alfiles
-		tablero[2][0] = new Alfil(true, new Coordenadas(2, 0));
-		tablero[5][0] = new Alfil(true, new Coordenadas(5, 0));
-		tablero[2][7] = new Alfil(false, new Coordenadas(2, 7));
-		tablero[5][7] = new Alfil(false, new Coordenadas(5, 7));
+//		tablero[2][0] = new Alfil(true, new Coordenadas(2, 0));
+//		tablero[5][0] = new Alfil(true, new Coordenadas(5, 0));
+//		tablero[2][7] = new Alfil(false, new Coordenadas(2, 7));
+//		tablero[5][7] = new Alfil(false, new Coordenadas(5, 7));
 		//Reina
-		tablero[3][0] = new Reina(true, new Coordenadas(3, 0));
+//		tablero[3][0] = new Reina(true, new Coordenadas(3, 0));
 		tablero[3][7] = new Reina(false, new Coordenadas(3, 7));
 		//Rey
 		tablero[4][0] = new Rey(true, new Coordenadas(4, 0));
 		tablero[4][7] = new Rey(false, new Coordenadas(4, 7));
 		//Peones
-		for (int coorX = 0; coorX < 8; coorX++) {
-			tablero[coorX][1] = new Peon(true, new Coordenadas(coorX, 1));
-			tablero[coorX][6] = new Peon(false, new Coordenadas(coorX, 6));
-		}
+//		for (int coorX = 0; coorX < 8; coorX++) {
+//			tablero[coorX][1] = new Peon(true, new Coordenadas(coorX, 1));
+//			tablero[coorX][6] = new Peon(false, new Coordenadas(coorX, 6));
+//		}
 	}
 	
 	public void printTablero(Coordenadas[] legalMoves, boolean isWhiteTurn) {
+		//El tablero girara para que se muestre tal como lo veria cada jugador en la vida real
 		Coordenadas coord = new Coordenadas(0, 0);
 		boolean specialSquare;
+		int[] columnas = isWhiteTurn?new int[] {7, 6, 5, 4, 3, 2, 1, 0}:new int[] {0, 1, 2, 3, 4, 5, 6, 7};
+		int[] filas =isWhiteTurn?new int[] {0, 1, 2, 3, 4, 5, 6, 7}:new int[] {7, 6, 5, 4, 3, 2, 1, 0};
 		
-		System.out.println("  +-------------------------------+");
-		for (int coorY = 7; coorY > -1; coorY--) {
+		System.out.println(isWhiteTurn?"    A   B   C   D   E   F   G   H X":"    H   G   F   E   D   C   B   A X");
+		System.out.println("  +-------------------------------+ Y");
+		for (int coorY: columnas) {
 			System.out.print((coorY+1) + " |");
-			for (int coorX = 0; coorX < 8; coorX++) {
+			for (int coorX : filas) {
 				coord.setCoords(coorX,  coorY);
 				specialSquare = 
 						legalMoves!=null?coord.insideOf(legalMoves):false; //legalMoves null -> siempre false
@@ -69,6 +73,7 @@ public class Tablero {
 				System.out.print("|");
 				
 			}
+			System.out.print(" " + (coorY+1));
 			switch (coorY) {
 			case 7:
 				System.out.print((isWhiteTurn?"    ":" -> ") + "Negras: " + this.p2);
@@ -124,13 +129,13 @@ public class Tablero {
 				break;
 			}
 			System.out.println();
-			if (coorY != 0) System.out.println
-			("  |---+---+---+---+---+---+---+---|");
+			if ((isWhiteTurn && coorY != 0) || (!isWhiteTurn && coorY != 7)) 
+				System.out.println("  |---+---+---+---+---+---+---+---|");
 			
 		}
 		System.out.println("Y +-------------------------------+");
-		System.out.print("  X A   B   C   D   E   F   G   H");
-		System.out.println("\n");
+		System.out.println(isWhiteTurn?"    A   B   C   D   E   F   G   H X":"    H   G   F   E   D   C   B   A X");
+		System.out.println("          Enter: abrir menú\n");
 	}
 	
 	public void printTablero(boolean isWhiteTurn) {
@@ -183,32 +188,6 @@ public class Tablero {
 		return isCheck;
 	}
 	
-	public boolean isCheckMate(boolean isWhiteKing) {
-		for (Piezas[] y: this.tablero) {
-			for (Piezas x: y) {
-				if (x != null && x.isWhite == isWhiteKing)
-					if (x.legalMoves(this).length > 0) return false;
-			}
-		}
-		//Si no puede moverse y esta en jaque, es jaquemate
-		if (this.isCheck(isWhiteKing)) return true;
-		//Si no puede moverse pero no esta en jaque, es empate
-		return false;
-	}
-	
-	public boolean isStalemate(boolean isWhiteKing) {
-		for (Piezas[] y: this.tablero) {
-			for (Piezas x: y) {
-				if (x != null && x.isWhite == isWhiteKing)
-					if (x.legalMoves(this).length > 0) return false;
-			}
-		}
-		//Si no puede moverse y esta en jaque, es jaquemate
-		if (this.isCheck(isWhiteKing)) return false;
-		//Si no puede moverse pero no esta en jaque, es empate
-		return true;
-	}
-	
 	public boolean impossibleCheckmate() {
 		/*Rey vs Rey
 		 * Rey y Alfil vs Rey
@@ -222,5 +201,54 @@ public class Tablero {
 		}
 		
 		return false;
+	}
+	
+	public int refreshGameStatus(boolean isWhiteKing) {
+		boolean canMove = false;
+		for (Piezas[] y: this.tablero) {
+			for (Piezas x: y) {
+				if (x != null && x.isWhite == isWhiteKing)
+					if (x.legalMoves(this).length > 0) {
+						canMove = true;
+						break;
+					}
+			}
+		}
+		
+		if (!canMove) {
+			if (this.isCheck(isWhiteKing)) return -1; //Si no tiene movimientos y esta en jaque, es jaque mate
+			else {
+				this.printTablero(isWhiteKing);
+				System.out.println("Empate por no poder mover ninguna pieza.");
+				return 0; //Si no tiene movimientos pero no esta en jaque, es stalemate
+			}
+		} else {
+			/*Existen combinaciones de piezas que hacen imposible conseguir un jaquemate y las partidas se alargarían
+			 * infinitamente:
+			 * Rey vs Rey
+			 * Rey y Alfil vs Rey
+			 * Rey y Caballo vs Rey
+			 */
+			LinkedList<Coordenadas> piezas = new LinkedList<Coordenadas>();
+			
+			for (Piezas[] y: this.tablero) {
+				for (Piezas x: y) {
+					if (x != null && x.isWhite == isWhiteKing)
+						piezas.add(x.posicion);
+					if (piezas.size() > 3) return 1; //Si hay mas de 3 piezas, no puede ser ninguna de las combinaciones
+				}
+			}
+			if (piezas.size() == 2) return 0; //Quedan los dos reyes, es un empate
+			//Como tenemos solo 3 piezas, dos de ellas tienen que ser necesariamente los dos reyes
+			//Por lo que solo tenemos que ver si entre las tres piezas hay un alfil o un caballo, da igual el color
+			for (Coordenadas c: piezas) {
+				if (!(this.getCasilla(c) instanceof Alfil) 
+						&& !(this.getCasilla(c) instanceof Caballo)
+						&& !(this.getCasilla(c) instanceof Rey)) return 1; //Si la pieza es diferente de alfil, caballo y rey
+			}
+		}
+		this.printTablero(isWhiteKing);
+		System.out.println("Empate por no haber piezas suficientes para conseguir un jaquemate.");
+		return 0; //Las piezas son alguna de las combinaciones de empate
 	}
 }

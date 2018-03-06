@@ -143,7 +143,7 @@ class Torre extends Piezas {
 	@Override
 	public void killPieza() {
 		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+		System.out.println(this.isWhite?"una torre blanca.":"una torre negra.");
 	}
 
 	@Override
@@ -209,7 +209,7 @@ class Caballo extends Piezas {
 	@Override
 	public void killPieza() {
 		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+		System.out.println(this.isWhite?"un caballo blanco.":"un caballo negro");
 	}
 
 	@Override
@@ -270,7 +270,7 @@ class Alfil extends Piezas {
 	@Override
 	public void killPieza() {
 		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+		System.out.println(this.isWhite?"un alfil blanco.":"un alfil negro");
 	}
 
 	@Override
@@ -335,7 +335,7 @@ class Reina extends Piezas {
 	@Override
 	public void killPieza() {
 		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+		System.out.println(this.isWhite?"una reina blanca.":"una reina negra");
 	}
 
 	@Override
@@ -401,7 +401,7 @@ class Rey extends Piezas {
 	@Override
 	public void killPieza() {
 		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+		System.out.println(this.isWhite?"un rey blanco.":"un rey negro");
 	}
 
 	@Override

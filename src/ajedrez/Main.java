@@ -10,7 +10,6 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		Partida part = new Partida(sc);
 		part.jugar(sc);
-		System.out.println("FIn programa");
 	}
 
 }

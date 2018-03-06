@@ -5,23 +5,21 @@ import java.util.Scanner;
 public class Partida {
 	Controles ctrl;
 	Tablero tbl;
-	boolean play;
-	boolean empate;
+	int gameStatus; //1: jugar 0:empate -1:derrota
 	
 	public Partida(Scanner sc) {
-		System.out.println("Jugador 1: ");
+		System.out.println("Set blanco. Nombre del jugador: ");
 		String p1 = sc.nextLine();
-		System.out.println("Jugador 2: ");
+		System.out.println("Set negro. Nombre del jugador: ");
 		String p2 = sc.nextLine();
 		
 		this.tbl = new Tablero(p1, p2);
 		this.ctrl = new Controles(this.tbl);
-		this.play = true;
-		this.empate = false;
+		this.gameStatus = 1;
 	}
 	
 	public void jugar(Scanner sc) {
-		boolean moved;
+		boolean moved, empate;
 		
 		do {
 			do {
@@ -35,55 +33,76 @@ public class Partida {
 					case 1:
 						empate = aceptarEmpate(sc);
 						if (empate) {
-							System.out.println("empate aceptado");
-							play = false;
+							this.tbl.printTablero(this.ctrl.isWhiteTurn);
+							System.out.println("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
+							this.gameStatus = 0;
 							moved = true;
-						} else System.out.println("epate deegado");
+						} else System.out.println("Empate denegado");
 						break;
 					case 2:
 						moved = true;
-						this.ctrl.changeTurn();
-						play = false;
+						this.ctrl.changeTurn(); //Si te rindes, gana el otro jugador
+						this.gameStatus = -1;
 						break;
-					default:
-						break;
+					case 3:
+						System.out.println("\nPara elegir una pieza o casilla, escribe las coordenadas,"
+								+ "\nprimero la letra y luego el número; por ejemplo, A1."
+								+ "\nLa partida finalizará automáticamente en caso de jaquemate o"
+								+ "\nde empate. El empate puede ser porque las piezas disponibles"
+								+ "\nhacen imposible el jaquemate a ambos jugadores o un jugador"
+								+ "\nno dispone de movimientos posibles."
+								+ "\n\nEnter para continuar...");
+						sc.nextLine();
 					}
 				} 
 			} while (!moved);
-			
-			if (play) {
-				//Se comprueba si se ha hecho jaque o jaquemate al OPONENTE
-				if (this.tbl.isCheckMate(!this.ctrl.isWhiteTurn)) {
-					this.tbl.printTablero(this.ctrl.isWhiteTurn);
-					System.out.println("ï¿½JAQUEMATE!");
-					play = false;
-				} else if (this.tbl.isCheck(!this.ctrl.isWhiteTurn)) {
-					System.out.println(
-							"Jaque. El rey " + (this.ctrl.isWhiteTurn ? "negro" : "blanco") + " esta bajo amenaza.");
-				} 
+			//Si ha movido pieza en vez de rendirse o empatar
+			if (this.gameStatus == 1) {
+				//Se actuaiza el estado del juego y tiene que ser -1, 0 o 1
+				this.gameStatus = this.tbl.refreshGameStatus(!this.ctrl.isWhiteTurn);
 				
-				if (play) this.ctrl.changeTurn();
+				if (this.gameStatus == -1) {
+					this.tbl.printTablero(this.ctrl.isWhiteTurn);
+					System.out.println("~~~~~~~~~~~~~~[JAQUEMATE]~~~~~~~~~~~~~~");
+				} else if (this.gameStatus == 0) {
+					
+				} else {
+					if (this.tbl.isCheck(!this.ctrl.isWhiteTurn)) 
+						System.out.println("El rey " + (this.ctrl.isWhiteTurn?" negro ":" blanco ") + " esta en jaque.");
+					this.ctrl.changeTurn();
+				}
 			}
-		} while (play);
-		if (empate) System.out.println("La partida ha acabado en empate");
-		else System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador.");
+		} while (this.gameStatus == 1);
+		
+		if (this.gameStatus == 0) 
+			System.out.println("----------------EMPATE----------------"
+				+ "\nNingún jugador ha ganado."
+				+ "\n--------------------------------------");
+		else 
+			System.out.println("--------------VICTORIA--------------\n" 
+							+ (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador"
+							+ "\n------------------------------------");
 		System.out.println("Partida acabada.");
 	}
 	
 	public int menuJugador(Scanner sc) {
-		System.out.println("Elige una opción:"
-				+ "\n 1 - Solicitar empate."
-				+ "\n 2 - Rendirse."
-				+ "\n\n 0 - Volver");
 		int opc = -1;
+		
 		do {
+			System.out.println("Elige una opción:"
+					+ "\n 1 - Solicitar empate."
+					+ "\n 2 - Rendirse."
+					+ "\n 3 - ¿Como jugar?"
+					+ "\n\n 0 - Volver");
+			
 			try {
 				opc = Integer.parseInt(sc.nextLine());
-				if (opc < 0 || opc > 2) throw new Exception();
+				if (opc < 0 || opc > 3) throw new Exception();
 			} catch (Exception e) {
-				System.out.println("Introduce un número");
+				System.out.println();
 			}
-		} while (opc < 0 || opc > 2);
+		} while (opc < 0 || opc > 3);
+		
 		return opc;
 	}
 	

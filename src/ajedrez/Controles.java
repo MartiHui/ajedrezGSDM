@@ -18,7 +18,7 @@ public class Controles {
 	public Coordenadas elegirPieza(Scanner sc) {
 		Coordenadas origen;
 		
-		System.out.println("Elige una pieza. Si no introduces ninguna coordenada, abrirás las opciones de jugador.");
+		System.out.println("Elige una pieza:");
 		do {
 			origen = new Coordenadas(sc);
 			if (origen.isEmpty()) {
@@ -44,7 +44,7 @@ public class Controles {
 		Coordenadas destino;
 		
 		this.tablero.printTablero(p.legalMoves(this.tablero), isWhiteTurn);
-		System.out.println("ELige la casilla a la que moverte. Si no introduces ninguna coordenada, podrás elegir una pieza diferente.");
+		System.out.println("Elige una casilla:");
 		do {
 			destino = new Coordenadas(sc);
 			if (destino.isEmpty()) {

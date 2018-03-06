@@ -20,8 +20,6 @@ public class Coordenadas {
 	public void getCoordenadas(Scanner sc) {
 		String input;
 		
-		System.out.println("Introduce las coordenadas. Primero la letra"
-				+ " y luego el número (ej.:A1): ");
 		do {
 			try {
 				input = sc.nextLine();
