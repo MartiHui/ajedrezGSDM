@@ -1,11 +1,16 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Partida {
+public class Partida implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1757931269172083173L;
 	Controles ctrl;
 	Tablero tbl;
-	int gameStatus; //1: jugar 0:empate -1:derrota
+	int gameStatus; //2:pausado 1: jugar 0:empate -1:derrota
 	int numRondas;
 	
 	public Partida(Scanner sc) {
@@ -22,6 +27,8 @@ public class Partida {
 	
 	public void jugar(Scanner sc) {
 		boolean moved, empate;
+		
+		if (this.gameStatus == 2) this.gameStatus = 1;
 		
 		do {
 			if (this.ctrl.isWhiteTurn) this.numRondas++;
@@ -57,6 +64,11 @@ public class Partida {
 								+ "\nno dispone de movimientos posibles."
 								+ "\n\nEnter para continuar...");
 						sc.nextLine();
+						break;
+					case 4:
+						moved = true;
+						this.gameStatus = 2;
+						break;
 					}
 				} 
 			} while (!moved);
@@ -90,7 +102,7 @@ public class Partida {
 					+ "\n------------------------------------");
 		}
 			
-		System.out.println("Partida acabada. Número de rondas:" + this.numRondas);
+		if (this.gameStatus != 2) System.out.println("Partida acabada. Número de rondas:" + this.numRondas);
 	}
 	
 	public int menuJugador(Scanner sc) {
@@ -101,6 +113,7 @@ public class Partida {
 					+ "\n 1 - Solicitar empate."
 					+ "\n 2 - Rendirse."
 					+ "\n 3 - ¿Como jugar?"
+					+ "\n 4 - Salir de la partida."
 					+ "\n\n 0 - Volver");
 			
 			try {

@@ -1,8 +1,13 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class ListaPartidas {
+public class ListaPartidas implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5744721148145742808L;
 	public LinkedList<Partida> partidasActivas;
 	private LinkedList<Partida> partidasAcabadas;
 	
@@ -19,7 +24,7 @@ public class ListaPartidas {
 	public void mostrarPartidasAcabadas() {
 		if (this.partidasAcabadas.size() == 0) System.out.println("No hay ninguna partida.");
 		else 
-			for (int i = this.partidasAcabadas.size(); i >= 0; i++) {
+			for (int i = this.partidasAcabadas.size()-1; i >= 0; i--) {
 				System.out.println("Partida " + (i+1) + " - " + this.partidasAcabadas.get(i).estadoPartida());
 			}
 	}
@@ -27,7 +32,7 @@ public class ListaPartidas {
 	public void mostrarPartidasActivas() {
 		if (this.partidasActivas.size() == 0) System.out.println("No hay ninguna partida.");
 		else 
-			for (int i = this.partidasActivas.size(); i >= 0; i++) {
+			for (int i = this.partidasActivas.size()-1; i >= 0; i--) {
 				System.out.println("Partida " + (i+1) + " - " + this.partidasActivas.get(i).estadoPartida());
 			}
 	}

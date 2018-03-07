@@ -1,8 +1,13 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Coordenadas {
+public class Coordenadas implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -726557920271586203L;
 	public int coorX; //Coordenada horizontal (A-H)
 	public int coorY; //Coordenada vertical (1-8)
 	

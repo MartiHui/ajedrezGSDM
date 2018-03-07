@@ -1,8 +1,13 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public abstract class Piezas {
+public abstract class Piezas implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5518742684251085433L;
 	public boolean isWhite; //¿La ficha es blanca?
 	Coordenadas posicion; //Posicion de la ficha en el tablero
 	
@@ -28,6 +33,10 @@ public abstract class Piezas {
 }
 
 class Peon extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5883920772363369215L;
 	public boolean firstMove; //El proximo movimiento de la pieza va a ser el primero que hace?
 	
 	public Peon(boolean isBlanca, Coordenadas posicion) {
@@ -102,6 +111,10 @@ class Peon extends Piezas {
 }
 
 class Torre extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3067161873074010069L;
 	public boolean originalPosition;
 	
 	public Torre(boolean isBlanca, Coordenadas posicion) {
@@ -175,6 +188,11 @@ class Torre extends Piezas {
 }
 
 class Caballo extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 597191665010835210L;
+
 	public Caballo(boolean isBlanca, Coordenadas posicion) {
 		super(isBlanca, posicion);
 	}
@@ -234,6 +252,11 @@ class Caballo extends Piezas {
 }
 	
 class Alfil extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8994524081522199417L;
+
 	public Alfil(boolean isBlanca, Coordenadas posicion) {
 		super(isBlanca, posicion);
 	}
@@ -296,6 +319,11 @@ class Alfil extends Piezas {
 }
 
 class Reina extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2635363113082533547L;
+
 	public Reina(boolean isBlanca, Coordenadas posicion) {
 		super(isBlanca, posicion);
 	}
@@ -363,6 +391,10 @@ class Reina extends Piezas {
 }
 
 class Rey extends Piezas {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2977013684368089937L;
 	public boolean originalPosition;
 	
 	public Rey(boolean isBlanca, Coordenadas posicion) {

@@ -1,8 +1,13 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Controles {
+public class Controles implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9161167521844489559L;
 	public Tablero tablero;
 	public boolean isWhiteTurn;
 	

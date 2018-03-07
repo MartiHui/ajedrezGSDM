@@ -1,8 +1,13 @@
 package ajedrez;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Tablero {
+public class Tablero implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1358873644467664220L;
 	public Piezas[][] tablero; //Tablero y piezas
 	public LinkedList<Piezas> piezasBlancasMuertas; //RIP
 	public LinkedList<Piezas> piezasNegrasMuertas;
@@ -188,21 +193,6 @@ public class Tablero {
 		return isCheck;
 	}
 	
-	public boolean impossibleCheckmate() {
-		/*Rey vs Rey
-		 * Rey y Alfil vs Rey
-		 * Rey y Caballo vs Rey
-		 */
-		LinkedList<Coordenadas> piezas = new LinkedList<Coordenadas>();
-		for (Piezas[] y: this.tablero) {
-			for (Piezas x: y) {
-				if (x != null) piezas.add(x.posicion);
-			}
-		}
-		
-		return false;
-	}
-	
 	public int refreshGameStatus(boolean isWhiteKing) {
 		boolean canMove = false;
 		for (Piezas[] y: this.tablero) {
@@ -233,7 +223,7 @@ public class Tablero {
 			
 			for (Piezas[] y: this.tablero) {
 				for (Piezas x: y) {
-					if (x != null && x.isWhite == isWhiteKing)
+					if (x != null)
 						piezas.add(x.posicion);
 					if (piezas.size() > 3) return 1; //Si hay mas de 3 piezas, no puede ser ninguna de las combinaciones
 				}
@@ -242,13 +232,12 @@ public class Tablero {
 			//Como tenemos solo 3 piezas, dos de ellas tienen que ser necesariamente los dos reyes
 			//Por lo que solo tenemos que ver si entre las tres piezas hay un alfil o un caballo, da igual el color
 			for (Coordenadas c: piezas) {
-				if (!(this.getCasilla(c) instanceof Alfil) 
-						&& !(this.getCasilla(c) instanceof Caballo)
-						&& !(this.getCasilla(c) instanceof Rey)) return 1; //Si la pieza es diferente de alfil, caballo y rey
+				if (!((this.getCasilla(c) instanceof Alfil) 
+						|| (this.getCasilla(c) instanceof Caballo)
+						|| (this.getCasilla(c) instanceof Rey))) return 1; //Si la pieza es diferente de alfil, caballo y rey
 			}
 		}
-		this.printTablero(isWhiteKing);
-		System.out.println("Empate por no haber piezas suficientes para conseguir un jaquemate.");
+		
 		return 0; //Las piezas son alguna de las combinaciones de empate
 	}
 }

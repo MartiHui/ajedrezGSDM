@@ -1,5 +1,11 @@
 package ajedrez;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 public class Main {
@@ -10,7 +16,12 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		boolean salir = false;
 		ListaPartidas lp = new ListaPartidas();
-		Partida p;
+		
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream("save.dat"));
+			readData(ois, lp);
+			ois.close();
+		} catch (Exception e) {}
 		
 		do {
 			switch (introduccion(sc)) {
@@ -23,13 +34,8 @@ public class Main {
 				break;
 				
 			case 2:
-				p = elegirPartida(sc, lp);
-				p.jugar(sc);
-				if (p.gameStatus == 1) {
-					System.out.println("Partida guardada");
-				} else {
-					lp.acabarPartida(p);
-				}
+				elegirPartida(sc, lp);
+				break;
 				
 			case 3:
 				borrarPartida(sc, lp);
@@ -43,6 +49,10 @@ public class Main {
 				break;
 			}
 		} while (!salir);
+		
+		System.out.println("Guardando...");
+		saveData(lp);
+		System.out.println("Programa cerrado.");
 	}
 	
 	public static int introduccion(Scanner sc) {
@@ -69,18 +79,15 @@ public class Main {
 		Partida p = new Partida(sc);
 		lp.partidasActivas.add(p);
 		p.jugar(sc);
-		//Cuando salgan de partida se mira el porque
-		if (p.gameStatus == 1) {
-			System.out.println("Partida guardada");
-		} else {
-			lp.acabarPartida(p);
-		}
+		salirPartida(p, lp);
 	}
 	
 	public static void borrarPartida(Scanner sc, ListaPartidas lp) {
 		int opc = -2;
 		
 		lp.mostrarPartidasActivas();
+		if (lp.partidasActivas.size() == 0) return;
+		
 		System.out.println("\nElige que partida borrar (elige 0 para no volver atrás): ");
 		do {
 			try {
@@ -94,8 +101,54 @@ public class Main {
 		if (opc != -1) lp.partidasActivas.remove(opc); 
 	}
 	
-	public static Partida elegirPartida(Scanner sc, ListaPartidas lp) {
+	public static void elegirPartida(Scanner sc, ListaPartidas lp) {
+		int opc = -2;
+		Partida p;
 		
+		lp.mostrarPartidasActivas();
+		if (lp.partidasActivas.size() == 0) return;
+		
+		System.out.println("\nElige que partida cargar (elige 0 para no volver atrás): ");
+		do {
+			try {
+				opc = Integer.parseInt(sc.nextLine()) - 1;
+				if (opc < -1 || opc > lp.partidasActivas.size()) throw new Exception();
+			} catch (Exception e) {
+				System.out.println("Opción no disponible.");
+			}
+		} while (opc < -1 || opc > lp.partidasActivas.size());
+		
+		if (opc == -1) return;
+		
+		p = lp.partidasActivas.get(opc);
+		p.jugar(sc);
+		salirPartida(p, lp);
+	}
+	
+	public static void salirPartida(Partida p, ListaPartidas lp) {
+		if (p.gameStatus == 2) {
+			System.out.println("Partida guardada");
+		} else {
+			lp.acabarPartida(p);
+		}
+	}
+	
+	public static void saveData(ListaPartidas lp) {
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("save.dat"));
+			oos.writeObject(lp);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void readData(ObjectInputStream ois, ListaPartidas lp) {
+		try {
+			lp = (ListaPartidas) ois.readObject();
+		} catch (Exception e) {}
 	}
 
 }
