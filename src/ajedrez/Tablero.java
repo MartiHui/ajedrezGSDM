@@ -24,31 +24,31 @@ public class Tablero implements Serializable{
 	
 	private void startTablero() {
 		//Torres
-//		tablero[0][0] = new Torre(true, new Coordenadas(0, 0));
-//		tablero[7][0] = new Torre(true, new Coordenadas(7, 0));
-//		tablero[0][7] = new Torre(false, new Coordenadas(0, 7));
-//		tablero[7][7] = new Torre(false, new Coordenadas(7, 7));
+		tablero[0][0] = new Torre(true, new Coordenadas(0, 0));
+		tablero[7][0] = new Torre(true, new Coordenadas(7, 0));
+		tablero[0][7] = new Torre(false, new Coordenadas(0, 7));
+		tablero[7][7] = new Torre(false, new Coordenadas(7, 7));
 		//Caballos
-//		tablero[1][0] = new Caballo(true, new Coordenadas(1, 0));
-//		tablero[6][0] = new Caballo(true, new Coordenadas(6, 0));
-//		tablero[1][7] = new Caballo(false, new Coordenadas(1, 7));
-//		tablero[6][7] = new Caballo(false, new Coordenadas(6, 7));
+		tablero[1][0] = new Caballo(true, new Coordenadas(1, 0));
+		tablero[6][0] = new Caballo(true, new Coordenadas(6, 0));
+		tablero[1][7] = new Caballo(false, new Coordenadas(1, 7));
+		tablero[6][7] = new Caballo(false, new Coordenadas(6, 7));
 		//Alfiles
-//		tablero[2][0] = new Alfil(true, new Coordenadas(2, 0));
-//		tablero[5][0] = new Alfil(true, new Coordenadas(5, 0));
-//		tablero[2][7] = new Alfil(false, new Coordenadas(2, 7));
-//		tablero[5][7] = new Alfil(false, new Coordenadas(5, 7));
+		tablero[2][0] = new Alfil(true, new Coordenadas(2, 0));
+		tablero[5][0] = new Alfil(true, new Coordenadas(5, 0));
+		tablero[2][7] = new Alfil(false, new Coordenadas(2, 7));
+		tablero[5][7] = new Alfil(false, new Coordenadas(5, 7));
 		//Reina
-//		tablero[3][0] = new Reina(true, new Coordenadas(3, 0));
+		tablero[3][0] = new Reina(true, new Coordenadas(3, 0));
 		tablero[3][7] = new Reina(false, new Coordenadas(3, 7));
 		//Rey
 		tablero[4][0] = new Rey(true, new Coordenadas(4, 0));
 		tablero[4][7] = new Rey(false, new Coordenadas(4, 7));
 		//Peones
-//		for (int coorX = 0; coorX < 8; coorX++) {
-//			tablero[coorX][1] = new Peon(true, new Coordenadas(coorX, 1));
-//			tablero[coorX][6] = new Peon(false, new Coordenadas(coorX, 6));
-//		}
+		for (int coorX = 0; coorX < 8; coorX++) {
+			tablero[coorX][1] = new Peon(true, new Coordenadas(coorX, 1));
+			tablero[coorX][6] = new Peon(false, new Coordenadas(coorX, 6));
+		}
 	}
 	
 	public void printTablero(Coordenadas[] legalMoves, boolean isWhiteTurn) {
