@@ -425,7 +425,39 @@ class Rey extends Piezas {
 				if (!tablero.possibleCheck(this.isWhite, this.posicion, temp))
 					posiciones.add(temp);
 		}
-		//Enroque
+		//Enroque. COndiciones: ni la torrey ni el rey debe haberse movido. Ni el rey ni las casillas por las que vaya a pasar el rey pueden estar en jaque
+		if (this.originalPosition) {
+			if (!tablero.isCheck(this.isWhite)) {//Si el rey no esta en jaque 
+				int coorY = this.posicion.coorY;
+				//Torre izquierda. En la casilla A1 o A8, segun sea negra o blanca
+				if (tablero.getCasilla(new Coordenadas(0, coorY)) instanceof Torre) { //Si es una torre
+					Torre t = (Torre) tablero.getCasilla(new Coordenadas(0, coorY));
+					if (t.originalPosition) { //Si no se ha movido en toda la partida (Si no se ha movido, tiene que ser tuya)
+						if (tablero.getCasilla(new Coordenadas(1, coorY)) == null //Si todas las casillas entre torre y rey están vacías
+								&& tablero.getCasilla(new Coordenadas(2, coorY)) == null
+								&& tablero.getCasilla(new Coordenadas(3, coorY)) == null) {
+							if (!tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(3, coorY)) //Si las casillas por las que pasa el rey no estan en jaque
+									&& !tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(2, coorY))) {
+								posiciones.add(new Coordenadas(2, coorY)); //Todas las condiciones se cumplen, puede hacer enroque
+							}
+						}
+					}
+				} 
+				//Torre derecha. En casilla H1 o H8, segun sea negra o blanca.
+				if (tablero.getCasilla(new Coordenadas(7, coorY)) instanceof Torre) { //Si es una torre
+					Torre t = (Torre) tablero.getCasilla(new Coordenadas(7, coorY));
+					if (t.originalPosition) { //Si no se ha movido en toda la partida (Si no se ha movido, tiene que ser tuya)
+						if (tablero.getCasilla(new Coordenadas(5, coorY)) == null //Si todas las casillas entre torre y rey están vacías
+								&& tablero.getCasilla(new Coordenadas(6, coorY)) == null) {
+							if (!tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(5, coorY)) //Si las casillas por las que pasa el rey no estan en jaque
+									&& !tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(6, coorY))) {
+								posiciones.add(new Coordenadas(6, coorY)); //Todas las condiciones se cumplen, puede hacer enroque
+							}
+						}
+					}
+				}
+			}
+		}
 		
 		return posiciones.toArray(new Coordenadas[posiciones.size()]);
 	}
@@ -445,6 +477,13 @@ class Rey extends Piezas {
 	@Override
 	public void moverPieza(Tablero tablero, Coordenadas destino) {
 		if (this.originalPosition) this.originalPosition = false;
+		 //Si el rey se ha movido dos casillas tiene que ser por enroque
+		if (this.posicion.distanceCasilla(destino).coorX == 2) { //Dos casillas a la derecha
+			tablero.movePieza(new Coordenadas(7, this.posicion.coorY), new Coordenadas(5, this.posicion.coorY));
+		}
+		if (this.posicion.distanceCasilla(destino).coorX == -2) { //Dos casillas a la izquierda
+			tablero.movePieza(new Coordenadas(0, this.posicion.coorY), new Coordenadas(3, this.posicion.coorY));
+		}
 		super.moverPieza(tablero, destino);
 	}
 }

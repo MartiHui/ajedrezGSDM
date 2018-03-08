@@ -57,6 +57,10 @@ public class Coordenadas implements Serializable {
 		return this.addCoordenadas(new Coordenadas(x, y));
 	}
 	
+	public Coordenadas distanceCasilla(Coordenadas c) {
+		return new Coordenadas(c.coorX-this.coorX, c.coorY-this.coorY);
+	}
+	
 	public boolean dentroTablero() {
 		return (0 <= this.coorX && this.coorX <= 7 && 0 <= this.coorY &&
 				this.coorY <= 7);
@@ -87,4 +91,5 @@ public class Coordenadas implements Serializable {
 	public boolean isEmpty() {
 		return (this.coorX == -1 && this.coorY == -1);
 	}
+	
 }
