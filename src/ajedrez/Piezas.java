@@ -27,9 +27,7 @@ public abstract class Piezas implements Serializable{
 		this.posicion.setCoords(destino);
 	}
 	
-	public void killPieza() {
-		System.out.print("Has matado ");
-	}
+	public abstract void killPieza(Tablero tbl);
 }
 
 class Peon extends Piezas {
@@ -86,9 +84,8 @@ class Peon extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"un peón blanco.":"un peón negro");
+	public void killPieza(Tablero tbl) {
+		tbl.setMsg("Has matado " + (this.isWhite?"un peón blanco.":"un peón negro."));
 	}
 	
 	public void promotion(Tablero tablero) {
@@ -154,9 +151,8 @@ class Torre extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"una torre blanca.":"una torre negra.");
+	public void killPieza(Tablero tbl) {
+		tbl.setMsg("Has matado " + (this.isWhite?"una torre blanca.":"una torre negra."));
 	}
 
 	@Override
@@ -225,9 +221,8 @@ class Caballo extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"un caballo blanco.":"un caballo negro");
+	public void killPieza(Tablero tbl) {
+		tbl.setMsg("Has matado " + (this.isWhite?"un caballo blanco.":"un caballo negro."));
 	}
 
 	@Override
@@ -291,9 +286,8 @@ class Alfil extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"un alfil blanco.":"un alfil negro");
+	public void killPieza(Tablero tbl) {
+		tbl.setMsg("Has matado " + (this.isWhite?"un alfil blanco.":"un alfil negro."));
 	}
 
 	@Override
@@ -361,9 +355,8 @@ class Reina extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"una reina blanca.":"una reina negra");
+	public void killPieza(Tablero tbl) {
+		tbl.setMsg("Has matado " + (this.isWhite?"una reina blanca.":"una reina negra."));
 	}
 
 	@Override
@@ -463,9 +456,8 @@ class Rey extends Piezas {
 	}
 
 	@Override
-	public void killPieza() {
-		super.killPieza();
-		System.out.println(this.isWhite?"un rey blanco.":"un rey negro");
+	public void killPieza(Tablero tbl) {
+		return; //Nunca vas a llegar a matar a un rey, siempre saldra antes el jaquemate
 	}
 
 	@Override

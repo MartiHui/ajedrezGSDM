@@ -44,14 +44,14 @@ public class Partida implements Serializable{
 					case 1:
 						empate = aceptarEmpate(sc);
 						if (empate) {
-							this.tbl.printTablero(this.ctrl.isWhiteTurn);
-							System.out.println("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
+							this.tbl.setMsg("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
 							this.gameStatus = 0;
 							moved = true;
-						} else System.out.println("Empate denegado");
+						} else this.tbl.setMsg("Empate denegado.");
 						break;
 					case 2:
 						moved = true;
+						this.tbl.setMsg((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " SE HA RENDIDO");
 						this.ctrl.changeTurn(); //Si te rindes, gana el otro jugador
 						this.gameStatus = -1;
 						break;
@@ -78,25 +78,24 @@ public class Partida implements Serializable{
 				this.gameStatus = this.tbl.refreshGameStatus(!this.ctrl.isWhiteTurn);
 				
 				if (this.gameStatus == -1) {
-					this.tbl.printTablero(this.ctrl.isWhiteTurn);
-					System.out.println("~~~~~~~~~~~~~~[JAQUEMATE]~~~~~~~~~~~~~~");
+					this.tbl.setMsg("~~~~~~~~~~~~~~[JAQUEMATE]~~~~~~~~~~~~~~");
 				} else if (this.gameStatus == 0) {
 					
 				} else {
 					if (this.tbl.isCheck(!this.ctrl.isWhiteTurn)) 
-						System.out.println("El rey " + (this.ctrl.isWhiteTurn?" negro ":" blanco ") + " esta en jaque.");
+						this.tbl.setMsg("El rey " + (this.ctrl.isWhiteTurn?" negro ":" blanco ") + " esta en jaque.");
 					this.ctrl.changeTurn();
 				}
 			}
 		} while (this.gameStatus == 1);
 		
 		if (this.gameStatus == 0) {
+			this.tbl.printTablero(this.ctrl.isWhiteTurn);
 			System.out.println("----------------EMPATE----------------"
 					+ "\nNingún jugador ha ganado."
 					+ "\n--------------------------------------");
-		}
-			
-		else  {
+		} else if (this.gameStatus == -1) {
+			this.tbl.printTablero(this.ctrl.isWhiteTurn);
 			System.out.println("--------------VICTORIA--------------\n" 
 					+ (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador"
 					+ "\n------------------------------------");
@@ -141,13 +140,16 @@ public class Partida implements Serializable{
 	}
 	
 	public String estadoPartida() {
+		String estado = this.tbl.p1 + " VS " + this.tbl.p2;
 		if (this.gameStatus == 1) {
-			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  |  Ronda nº" + this.numRondas + ".");
+			return (estado + "  |  Ronda nº" + this.numRondas + ".");
 		} else if (this.gameStatus == 0) {
-			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  | EMPATE tras " + this.numRondas + " rondas.");
-		} else {
-			return (this.tbl.p1 + " VS " + this.tbl.p2 + "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
+			return (estado + "  | EMPATE tras " + this.numRondas + " rondas.");
+		} else if (this.gameStatus == -1) {
+			return (estado + "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
 					" tras " + this.numRondas + " rondas.");
+		} else {
+			return (estado + "  | Partida en curso. Ronda nº" + this.numRondas + " rondas.");
 		}
 	}
 

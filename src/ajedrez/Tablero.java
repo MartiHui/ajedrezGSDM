@@ -12,6 +12,7 @@ public class Tablero implements Serializable{
 	public LinkedList<Piezas> piezasBlancasMuertas; //RIP
 	public LinkedList<Piezas> piezasNegrasMuertas;
 	public String p1, p2; //Nombre de los jugadores
+	public String msg;
 	
 	public Tablero(String p1, String p2) {
 		this.tablero = new Piezas[8][8];
@@ -20,6 +21,7 @@ public class Tablero implements Serializable{
 		this.piezasNegrasMuertas = new LinkedList<Piezas>();
 		this.p1 = p1;
 		this.p2 = p2;
+		this.msg = "";
 	}
 	
 	private void startTablero() {
@@ -141,10 +143,23 @@ public class Tablero implements Serializable{
 		System.out.println("Y +-------------------------------+");
 		System.out.println(isWhiteTurn?"    A   B   C   D   E   F   G   H X":"    H   G   F   E   D   C   B   A X");
 		System.out.println("          Enter: abrir menú\n");
+		
+		if (!this.msg.equals("")) {
+			System.out.println("-----------------------------------------"
+					+ "\n" + msg
+					+ "\n-----------------------------------------");
+			this.msg = "";
+		}
+		
+		System.out.println("------Turno de " + (isWhiteTurn?this.p1:this.p2) + "------");
 	}
 	
 	public void printTablero(boolean isWhiteTurn) {
 		printTablero(null, isWhiteTurn);
+	}
+	
+	public void setMsg(String str) {
+		this.msg = str;
 	}
 	
 	public Piezas getCasilla(Coordenadas coor) {
@@ -162,7 +177,7 @@ public class Tablero implements Serializable{
 			} else {
 				this.piezasNegrasMuertas.add(this.getCasilla(dst));
 			}
-			this.getCasilla(dst).killPieza();
+			this.getCasilla(dst).killPieza(this);
 		}
 		this.setCasilla(dst, this.getCasilla(org));
 		this.setCasilla(org, null);
@@ -208,8 +223,7 @@ public class Tablero implements Serializable{
 		if (!canMove) {
 			if (this.isCheck(isWhiteKing)) return -1; //Si no tiene movimientos y esta en jaque, es jaque mate
 			else {
-				this.printTablero(isWhiteKing);
-				System.out.println("Empate por no poder mover ninguna pieza.");
+				this.setMsg("No hay movimientos legales.");
 				return 0; //Si no tiene movimientos pero no esta en jaque, es stalemate
 			}
 		} else {
@@ -237,7 +251,7 @@ public class Tablero implements Serializable{
 						|| (this.getCasilla(c) instanceof Rey))) return 1; //Si la pieza es diferente de alfil, caballo y rey
 			}
 		}
-		
+		this.setMsg("No hay suficientes piezas para lograr un jaquemate.");
 		return 0; //Las piezas son alguna de las combinaciones de empate
 	}
 }
