@@ -7,7 +7,10 @@ public class Tablero implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1358873644467664220L;
+	private static final long serialVersionUID = -1332063901361324268L;
+	/**
+	 * 
+	 */
 	public Piezas[][] tablero; //Tablero y piezas
 	public LinkedList<Piezas> piezasBlancasMuertas; //RIP
 	public LinkedList<Piezas> piezasNegrasMuertas;

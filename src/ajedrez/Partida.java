@@ -8,7 +8,10 @@ public class Partida implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1757931269172083173L;
+	private static final long serialVersionUID = 5416013799361183948L;
+	/**
+	 * 
+	 */
 	Controles ctrl;
 	Tablero tbl;
 	int gameStatus; //2:pausado 1: jugar 0:empate -1:derrota
@@ -61,8 +64,8 @@ public class Partida implements Serializable{
 						break;
 					case 3:
 						System.out.println("\nPara elegir una pieza o casilla, escribe las coordenadas,"
-								+ "\nprimero la letra y luego el número; por ejemplo, A1."
-								+ "\nLa partida finalizará automáticamente en caso de jaquemate o"
+								+ "\nprimero la letra y luego el nï¿½mero; por ejemplo, A1."
+								+ "\nLa partida finalizarï¿½ automï¿½ticamente en caso de jaquemate o"
 								+ "\nde empate. El empate puede ser porque las piezas disponibles"
 								+ "\nhacen imposible el jaquemate a ambos jugadores o un jugador"
 								+ "\nno dispone de movimientos posibles."
@@ -100,7 +103,7 @@ public class Partida implements Serializable{
 		if (this.gameStatus == 0) {
 			this.tbl.printTablero(this.ctrl.isWhiteTurn);
 			System.out.println("----------------EMPATE----------------"
-					+ "\nNingún jugador ha ganado."
+					+ "\nNingï¿½n jugador ha ganado."
 					+ "\n--------------------------------------");
 		} else if (this.gameStatus == -1) {
 			this.tbl.printTablero(this.ctrl.isWhiteTurn);
@@ -109,17 +112,17 @@ public class Partida implements Serializable{
 					+ "\n------------------------------------");
 		}
 			
-		if (this.gameStatus != 2) System.out.println("Partida acabada. Número de rondas:" + this.numRondas);
+		if (this.gameStatus != 2) System.out.println("Partida acabada. Nï¿½mero de rondas:" + this.numRondas);
 	}
 	
 	public int menuJugador(Scanner sc) {
 		int opc = -1;
 		
 		do {
-			System.out.println("Elige una opción:"
+			System.out.println("Elige una opciï¿½n:"
 					+ "\n 1 - Solicitar empate."
 					+ "\n 2 - Rendirse."
-					+ "\n 3 - ¿Como jugar?"
+					+ "\n 3 - ï¿½Como jugar?"
 					+ "\n 4 - Retrocedes un turno"
 					+ "\n 5 - Salir de la partida."
 					+ "\n\n 0 - Volver");
@@ -136,7 +139,7 @@ public class Partida implements Serializable{
 	}
 	
 	public boolean aceptarEmpate(Scanner sc) {
-		System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " ha solicitado un empate. ¿Aceptas? (Y/N)");
+		System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " ha solicitado un empate. ï¿½Aceptas? (Y/N)");
 		String opc;
 		do {
 			opc = sc.nextLine();
@@ -151,14 +154,14 @@ public class Partida implements Serializable{
 	public String estadoPartida() {
 		String estado = this.tbl.p1 + " VS " + this.tbl.p2;
 		if (this.gameStatus == 1) {
-			return (estado + "  |  Ronda nº" + this.numRondas + ".");
+			return (estado + "  |  Ronda nï¿½" + this.numRondas + ".");
 		} else if (this.gameStatus == 0) {
 			return (estado + "  | EMPATE tras " + this.numRondas + " rondas.");
 		} else if (this.gameStatus == -1) {
 			return (estado + "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
 					" tras " + this.numRondas + " rondas.");
 		} else {
-			return (estado + "  | Partida en curso. Ronda nº" + this.numRondas + " rondas.");
+			return (estado + "  | Partida en curso. Ronda nï¿½" + this.numRondas + " rondas.");
 		}
 	}
 	

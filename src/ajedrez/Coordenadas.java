@@ -7,7 +7,10 @@ public class Coordenadas implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -726557920271586203L;
+	private static final long serialVersionUID = -1010018348824770712L;
+	/**
+	 * 
+	 */
 	public int coorX; //Coordenada horizontal (A-H)
 	public int coorY; //Coordenada vertical (1-8)
 	
@@ -90,6 +93,10 @@ public class Coordenadas implements Serializable {
 	
 	public boolean isEmpty() {
 		return (this.coorX == -1 && this.coorY == -1);
+	}
+	
+	public boolean equals(Coordenadas c) {
+		return (this.coorX == c.coorX && this.coorY == c.coorY);
 	}
 	
 }
