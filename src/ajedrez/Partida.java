@@ -1,6 +1,7 @@
 package ajedrez;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Partida implements Serializable{
@@ -12,6 +13,7 @@ public class Partida implements Serializable{
 	Tablero tbl;
 	int gameStatus; //2:pausado 1: jugar 0:empate -1:derrota
 	int numRondas;
+	LinkedList<Movimiento> movimientos;
 	
 	public Partida(Scanner sc) {
 		System.out.println("Set blanco. Nombre del jugador: ");
@@ -23,6 +25,8 @@ public class Partida implements Serializable{
 		this.ctrl = new Controles(this.tbl);
 		this.gameStatus = 1;
 		this.numRondas = 0;
+		this.movimientos = new LinkedList<Movimiento>();
+		this.movimientos.add(null);
 	}
 	
 	public void jugar(Scanner sc) {
@@ -35,7 +39,7 @@ public class Partida implements Serializable{
 			
 			do {
 				this.tbl.printTablero(this.ctrl.isWhiteTurn);
-				moved = this.ctrl.moverPieza(sc);
+				moved = this.ctrl.moverPieza(sc, movimientos);
 				
 				if (!moved) {
 					switch (menuJugador(sc)) {
@@ -75,7 +79,7 @@ public class Partida implements Serializable{
 			//Si ha movido pieza en vez de rendirse o empatar
 			if (this.gameStatus == 1) {
 				//Se actuaiza el estado del juego y tiene que ser -1, 0 o 1
-				this.gameStatus = this.tbl.refreshGameStatus(!this.ctrl.isWhiteTurn);
+				this.gameStatus = this.tbl.refreshGameStatus(!this.ctrl.isWhiteTurn, this.movimientos.getLast()); 
 				
 				if (this.gameStatus == -1) {
 					this.tbl.setMsg("~~~~~~~~~~~~~~[JAQUEMATE]~~~~~~~~~~~~~~");

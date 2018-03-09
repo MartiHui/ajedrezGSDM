@@ -208,12 +208,12 @@ public class Tablero implements Serializable{
 		return isCheck;
 	}
 	
-	public int refreshGameStatus(boolean isWhiteKing) {
+	public int refreshGameStatus(boolean isWhiteKing, Movimiento mAnterior) {
 		boolean canMove = false;
 		for (Piezas[] y: this.tablero) {
 			for (Piezas x: y) {
 				if (x != null && x.isWhite == isWhiteKing)
-					if (x.legalMoves(this).length > 0) {
+					if (x.legalMoves(this, mAnterior).length > 0) {
 						canMove = true;
 						break;
 					}

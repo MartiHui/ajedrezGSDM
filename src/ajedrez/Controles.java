@@ -1,6 +1,7 @@
 package ajedrez;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Controles implements Serializable{
@@ -20,7 +21,7 @@ public class Controles implements Serializable{
 		this.isWhiteTurn = !this.isWhiteTurn;
 	}
 	
-	public Coordenadas elegirPieza(Scanner sc) {
+	public Coordenadas elegirPieza(Scanner sc, Movimiento mAnterior) {
 		Coordenadas origen;
 		
 		System.out.println("Elige una pieza:");
@@ -34,7 +35,7 @@ public class Controles implements Serializable{
 			} else if (this.tablero.getCasilla(origen).isWhite != this.isWhiteTurn) {
 				System.out.println("Esta pieza no te pertenece.");
 				continue;
-			} else if (this.tablero.getCasilla(origen).legalMoves(this.tablero).length == 0) {
+			} else if (this.tablero.getCasilla(origen).legalMoves(this.tablero, mAnterior).length == 0) {
 				System.out.println("Esta pieza no tiene movimientos permitidos.");
 				continue;
 			} else {
@@ -45,16 +46,16 @@ public class Controles implements Serializable{
 		return origen;
 	}
 	
-	public Coordenadas elegirDestino(Piezas p, Scanner sc) {
+	public Coordenadas elegirDestino(Piezas p, Scanner sc, Movimiento mAnterior) {
 		Coordenadas destino;
 		
-		this.tablero.printTablero(p.legalMoves(this.tablero), isWhiteTurn);
+		this.tablero.printTablero(p.legalMoves(this.tablero, mAnterior), isWhiteTurn);
 		System.out.println("Elige una casilla:");
 		do {
 			destino = new Coordenadas(sc);
 			if (destino.isEmpty()) {
 				return null;
-			} else if (!destino.insideOf(p.legalMoves(tablero)))
+			} else if (!destino.insideOf(p.legalMoves(tablero, mAnterior)))
 				System.out.println("No puedes moverte a esa casilla.");
 			else
 				break;
@@ -63,20 +64,22 @@ public class Controles implements Serializable{
 		return destino;
 	}
 	
-	public boolean moverPieza(Scanner sc) {
+	public boolean moverPieza(Scanner sc, LinkedList<Movimiento> listaMovimientos) {
 		Coordenadas org = null;
 		Coordenadas dst = null;
 		do {
-			org = this.elegirPieza(sc);
+			org = this.elegirPieza(sc, listaMovimientos.getLast());
 			if (org == null) break;
-			dst = this.elegirDestino(this.tablero.getCasilla(org), sc);
+			dst = this.elegirDestino(this.tablero.getCasilla(org), sc, listaMovimientos.getLast());
 			if (dst != null) break;
 			else this.tablero.printTablero(isWhiteTurn);
 		} while (true);
 		if (org == null) {
 			return false;
 		} else {
-			this.tablero.getCasilla(org).moverPieza(tablero, dst);
+			Movimiento mActual = new Movimiento(org, dst, this.tablero.getCasilla(org), this.tablero.getCasilla(dst));
+			this.tablero.getCasilla(org).moverPieza(tablero, dst, mActual);
+			listaMovimientos.add(mActual);
 			return true;
 		}
 	}

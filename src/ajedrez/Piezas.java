@@ -16,13 +16,13 @@ public abstract class Piezas implements Serializable{
 		this.posicion = posicion;
 	}
 	
-	public abstract Coordenadas[] legalMoves(Tablero tablero);
+	public abstract Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior); //El único que necesita mAnterior es el peon
 	
 	public abstract String toString();
 	//La pieza puede matar al rey enemigo en el siguiente turno?
 	public abstract boolean canKillKing(Tablero tablero);
 	
-	public void moverPieza(Tablero tablero, Coordenadas destino) {
+	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
 		tablero.movePieza(this.posicion, destino);
 		this.posicion.setCoords(destino);
 	}
@@ -48,7 +48,7 @@ class Peon extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		
 		//Primer movimiento de dos casilla verticales
@@ -72,14 +72,46 @@ class Peon extends Piezas {
 				tablero.getCasilla(this.posicion.addCoordenadas(1, this.isWhite?1:-1)).isWhite != this.isWhite
 				&& !tablero.possibleCheck(this.isWhite, this.posicion, this.posicion.addCoordenadas(1, this.isWhite?1:-1)))
 			posiciones.add(this.posicion.addCoordenadas(1, this.isWhite?1:-1));
-		
+		//En-passant izquierda
+		if (this.posicion.coorY == (this.isWhite?4:3) &&
+				this.posicion.addCoordenadas(new Coordenadas(-1, 0)).dentroTablero() &&
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) != null && //EL peón tiene que haber avanzado 3 casillas
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) instanceof Peon && //Tiene un peon justo a la izquierda
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))).isWhite != this.isWhite && //Ese peon es del oponente
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) == mAnterior.pOrigen && //Es el peon que se ha movido en el turno anterior
+				mAnterior.isPawnDoubleMove()) { //Ese peon se ha movido dos casillas hacia delante
+			posiciones.add(this.posicion.addCoordenadas(-1, this.isWhite?1:-1));
+		}
+		//En-passant derecha
+		if (this.posicion.coorY == (this.isWhite?4:3) &&
+				this.posicion.addCoordenadas(new Coordenadas(1, 0)).dentroTablero() &&
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) != null && //EL peón tiene que haber avanzado 3 casillas
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) instanceof Peon && //Tiene un peon justo a la izquierda
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))).isWhite != this.isWhite && //Ese peon es del oponente
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) == mAnterior.pOrigen && //Es el peon que se ha movido en el turno anterior
+				mAnterior.isPawnDoubleMove()) { //Ese peon se ha movido dos casillas hacia delante
+			posiciones.add(this.posicion.addCoordenadas(1, this.isWhite?1:-1));
+		}
 		return posiciones.toArray(new Coordenadas[posiciones.size()]);
 	}
 
 	@Override
-	public void moverPieza(Tablero tablero, Coordenadas destino) {
+	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
 		if (this.firstMove) this.firstMove = false;
-		super.moverPieza(tablero, destino);
+		
+		if (Math.abs(mActual.cOrigen.distanceCasilla(mActual.cDestino).coorX) == 1 &&  //Si se ha movido en diagonal
+				Math.abs(mActual.cOrigen.distanceCasilla(mActual.cDestino).coorY) == 1 &&
+				tablero.getCasilla(mActual.cDestino) == null) { //Se ha movido en diagonal a pesar de que no hay pieza rival
+			if (this.isWhite) {
+				tablero.piezasNegrasMuertas.add(tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY)));
+			} else {
+				tablero.piezasBlancasMuertas.add(tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY)));
+			}
+			tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY)).killPieza(tablero);
+			mActual.pDestino = tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY));
+			tablero.setCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY), null);
+		}
+		super.moverPieza(tablero, destino, mActual);
 		if (this.posicion.coorY == (this.isWhite?7:0)) this.promotion(tablero);
 	}
 
@@ -125,7 +157,7 @@ class Torre extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(1, 0),
 				new Coordenadas(0, 1), new Coordenadas(-1, 0),
@@ -177,9 +209,9 @@ class Torre extends Piezas {
 	}
 	
 	@Override
-	public void moverPieza(Tablero tablero, Coordenadas destino) {
+	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
 		if (this.originalPosition) this.originalPosition = false;
-		super.moverPieza(tablero, destino);
+		super.moverPieza(tablero, destino, mActual);
 	}
 }
 
@@ -199,7 +231,7 @@ class Caballo extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(2, 1),
 				new Coordenadas(2, -1), new Coordenadas(-2, 1),
@@ -262,7 +294,7 @@ class Alfil extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(-1, 1),
 				new Coordenadas(1, 1), new Coordenadas(1, -1),
@@ -328,7 +360,7 @@ class Reina extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(-1, 0),
 				new Coordenadas(1, 0), new Coordenadas(0, 1),
@@ -401,7 +433,7 @@ class Rey extends Piezas {
 	}
 
 	@Override
-	public Coordenadas[] legalMoves(Tablero tablero) {
+	public Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior) {
 		LinkedList<Coordenadas> posiciones = new LinkedList<Coordenadas>();
 		Coordenadas[] moves = new Coordenadas[] {new Coordenadas(-1, 0),
 				new Coordenadas(1, 0), new Coordenadas(0, 1),
@@ -467,7 +499,7 @@ class Rey extends Piezas {
 	}
 	
 	@Override
-	public void moverPieza(Tablero tablero, Coordenadas destino) {
+	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
 		if (this.originalPosition) this.originalPosition = false;
 		 //Si el rey se ha movido dos casillas tiene que ser por enroque
 		if (this.posicion.distanceCasilla(destino).coorX == 2) { //Dos casillas a la derecha
@@ -476,6 +508,6 @@ class Rey extends Piezas {
 		if (this.posicion.distanceCasilla(destino).coorX == -2) { //Dos casillas a la izquierda
 			tablero.movePieza(new Coordenadas(0, this.posicion.coorY), new Coordenadas(3, this.posicion.coorY));
 		}
-		super.moverPieza(tablero, destino);
+		super.moverPieza(tablero, destino, mActual);
 	}
 }
