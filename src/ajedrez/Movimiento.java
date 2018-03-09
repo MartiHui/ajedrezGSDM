@@ -1,6 +1,12 @@
 package ajedrez;
 
-public class Movimiento {
+import java.io.Serializable;
+
+public class Movimiento implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3465246927097124306L;
 	public Coordenadas cOrigen, cDestino;
 	public Piezas pOrigen, pDestino;
 	public boolean isFirstMove;
@@ -14,20 +20,20 @@ public class Movimiento {
 	}
 	
 	public boolean isCastling() {
-		return (Math.abs(this.cOrigen.distanceCasilla(cDestino).coorX) == 2);
+		return this.pOrigen instanceof Rey && (Math.abs(this.cOrigen.distanceCasilla(cDestino).coorX) == 2);
 	}
 	
 	public boolean isPawnDoubleMove() {
-		return (Math.abs(this.cOrigen.distanceCasilla(cDestino).coorY) == 2);
+		return this.pOrigen instanceof Peon && (Math.abs(this.cOrigen.distanceCasilla(cDestino).coorY) == 2);
 	}
 	
 	public boolean isPawnPromotion() {
-		return (this.cDestino.coorY == 0 || this.cDestino.coorY == 7);
+		return this.pOrigen instanceof Peon && (this.cDestino.coorY == 0 || this.cDestino.coorY == 7);
 	}
 	
 	public boolean isEnPassant() {
-		if (this.pDestino != null)
-			return (this.pDestino.posicion != this.cDestino);
+		if (this.pOrigen instanceof Peon && this.pDestino != null)
+			return (!this.pDestino.posicion.equals(this.cDestino));
 		else return false;
 	}
 	
@@ -52,7 +58,12 @@ public class Movimiento {
 		}
 		
 		if (isEnPassant()) {
+			System.out.println("yosh");
 			tbl.setCasilla(this.pDestino.posicion, this.pDestino);
+			if (this.pDestino != null) {
+				if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
+				else tbl.piezasNegrasMuertas.remove(this.pDestino);
+			}
 			this.pDestino = null;
 		}
 		
@@ -69,10 +80,20 @@ public class Movimiento {
 			}
 		}
 		
+		if (this.pDestino != null) {
+			if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
+			else tbl.piezasNegrasMuertas.remove(this.pDestino);
+		}
+		
 		tbl.setCasilla(cOrigen, pOrigen);
 		this.pOrigen.posicion = this.cOrigen;
 		tbl.setCasilla(cDestino, pDestino);
 		if (this.pDestino != null) this.pDestino.posicion = this.cDestino;
+	}
+	
+	public String toString() {
+		return "[" + this.pOrigen + "]: [" + this.cOrigen + ", " + this.cDestino
+				+ "]. Ha matado a " + (this.pDestino!=null?this.pDestino:"nada");
 	}
 
 }

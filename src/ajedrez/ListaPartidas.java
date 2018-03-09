@@ -8,6 +8,9 @@ public class ListaPartidas implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -5744721148145742808L;
+	/**
+	 * 
+	 */
 	public LinkedList<Partida> partidasActivas;
 	private LinkedList<Partida> partidasAcabadas;
 	

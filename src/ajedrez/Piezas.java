@@ -7,7 +7,10 @@ public abstract class Piezas implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5518742684251085433L;
+	private static final long serialVersionUID = -1603287332197999255L;
+	/**
+	 * 
+	 */
 	public boolean isWhite; //Â¿La ficha es blanca?
 	Coordenadas posicion; //Posicion de la ficha en el tablero
 	
@@ -16,7 +19,7 @@ public abstract class Piezas implements Serializable{
 		this.posicion = posicion;
 	}
 	
-	public abstract Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior); //El único que necesita mAnterior es el peon
+	public abstract Coordenadas[] legalMoves(Tablero tablero, Movimiento mAnterior); //El ï¿½nico que necesita mAnterior es el peon
 	
 	public abstract String toString();
 	//La pieza puede matar al rey enemigo en el siguiente turno?
@@ -75,7 +78,7 @@ class Peon extends Piezas {
 		//En-passant izquierda
 		if (this.posicion.coorY == (this.isWhite?4:3) &&
 				this.posicion.addCoordenadas(new Coordenadas(-1, 0)).dentroTablero() &&
-				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) != null && //EL peón tiene que haber avanzado 3 casillas
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) != null && //EL peï¿½n tiene que haber avanzado 3 casillas
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) instanceof Peon && //Tiene un peon justo a la izquierda
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))).isWhite != this.isWhite && //Ese peon es del oponente
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(-1, 0))) == mAnterior.pOrigen && //Es el peon que se ha movido en el turno anterior
@@ -85,7 +88,7 @@ class Peon extends Piezas {
 		//En-passant derecha
 		if (this.posicion.coorY == (this.isWhite?4:3) &&
 				this.posicion.addCoordenadas(new Coordenadas(1, 0)).dentroTablero() &&
-				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) != null && //EL peón tiene que haber avanzado 3 casillas
+				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) != null && //EL peï¿½n tiene que haber avanzado 3 casillas
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) instanceof Peon && //Tiene un peon justo a la izquierda
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))).isWhite != this.isWhite && //Ese peon es del oponente
 				tablero.getCasilla(this.posicion.addCoordenadas(new Coordenadas(1, 0))) == mAnterior.pOrigen && //Es el peon que se ha movido en el turno anterior
@@ -121,7 +124,7 @@ class Peon extends Piezas {
 
 	@Override
 	public void killPieza(Tablero tbl) {
-		tbl.setMsg("Has matado " + (this.isWhite?"un peón blanco.":"un peón negro."));
+		tbl.setMsg("Has matado " + (this.isWhite?"un peï¿½n blanco.":"un peï¿½n negro."));
 	}
 	
 	public void promotion(Tablero tablero) {
@@ -465,7 +468,7 @@ class Rey extends Piezas {
 				if (tablero.getCasilla(new Coordenadas(0, coorY)) instanceof Torre) { //Si es una torre
 					Torre t = (Torre) tablero.getCasilla(new Coordenadas(0, coorY));
 					if (t.originalPosition) { //Si no se ha movido en toda la partida (Si no se ha movido, tiene que ser tuya)
-						if (tablero.getCasilla(new Coordenadas(1, coorY)) == null //Si todas las casillas entre torre y rey están vacías
+						if (tablero.getCasilla(new Coordenadas(1, coorY)) == null //Si todas las casillas entre torre y rey estï¿½n vacï¿½as
 								&& tablero.getCasilla(new Coordenadas(2, coorY)) == null
 								&& tablero.getCasilla(new Coordenadas(3, coorY)) == null) {
 							if (!tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(3, coorY)) //Si las casillas por las que pasa el rey no estan en jaque
@@ -479,7 +482,7 @@ class Rey extends Piezas {
 				if (tablero.getCasilla(new Coordenadas(7, coorY)) instanceof Torre) { //Si es una torre
 					Torre t = (Torre) tablero.getCasilla(new Coordenadas(7, coorY));
 					if (t.originalPosition) { //Si no se ha movido en toda la partida (Si no se ha movido, tiene que ser tuya)
-						if (tablero.getCasilla(new Coordenadas(5, coorY)) == null //Si todas las casillas entre torre y rey están vacías
+						if (tablero.getCasilla(new Coordenadas(5, coorY)) == null //Si todas las casillas entre torre y rey estï¿½n vacï¿½as
 								&& tablero.getCasilla(new Coordenadas(6, coorY)) == null) {
 							if (!tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(5, coorY)) //Si las casillas por las que pasa el rey no estan en jaque
 									&& !tablero.possibleCheck(this.isWhite, this.posicion, new Coordenadas(6, coorY))) {

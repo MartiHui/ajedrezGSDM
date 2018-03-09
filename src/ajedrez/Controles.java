@@ -8,7 +8,10 @@ public class Controles implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -9161167521844489559L;
+	private static final long serialVersionUID = 1738660591554248778L;
+	/**
+	 * 
+	 */
 	public Tablero tablero;
 	public boolean isWhiteTurn;
 	
@@ -50,7 +53,7 @@ public class Controles implements Serializable{
 		Coordenadas destino;
 		
 		this.tablero.printTablero(p.legalMoves(this.tablero, mAnterior), isWhiteTurn);
-		System.out.println("Elige una casilla:");
+		System.out.println("Pieza elegida: " + p + " | Elige una casilla:");
 		do {
 			destino = new Coordenadas(sc);
 			if (destino.isEmpty()) {
