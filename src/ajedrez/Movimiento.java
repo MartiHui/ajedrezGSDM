@@ -58,7 +58,6 @@ public class Movimiento implements Serializable{
 		}
 		
 		if (isEnPassant()) {
-			System.out.println("yosh");
 			tbl.setCasilla(this.pDestino.posicion, this.pDestino);
 			if (this.pDestino != null) {
 				if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
