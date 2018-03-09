@@ -70,6 +70,10 @@ public class Partida implements Serializable{
 						sc.nextLine();
 						break;
 					case 4:
+						if (movimientos.size() >= 3) retrocederTurno();
+						else this.tbl.setMsg("No se puede retroceder");
+						break;
+					case 5:
 						moved = true;
 						this.gameStatus = 2;
 						break;
@@ -116,16 +120,17 @@ public class Partida implements Serializable{
 					+ "\n 1 - Solicitar empate."
 					+ "\n 2 - Rendirse."
 					+ "\n 3 - ¿Como jugar?"
-					+ "\n 4 - Salir de la partida."
+					+ "\n 4 - Retrocedes un turno"
+					+ "\n 5 - Salir de la partida."
 					+ "\n\n 0 - Volver");
 			
 			try {
 				opc = Integer.parseInt(sc.nextLine());
-				if (opc < 0 || opc > 3) throw new Exception();
+				if (opc < 0 || opc > 5) throw new Exception();
 			} catch (Exception e) {
 				System.out.println();
 			}
-		} while (opc < 0 || opc > 3);
+		} while (opc < 0 || opc > 5);
 		
 		return opc;
 	}
@@ -155,6 +160,15 @@ public class Partida implements Serializable{
 		} else {
 			return (estado + "  | Partida en curso. Ronda nº" + this.numRondas + " rondas.");
 		}
+	}
+	
+	public void retrocederTurno() {
+		this.numRondas--;
+		this.movimientos.getLast().deshacerMovimiento(tbl);
+		this.movimientos.removeLast();
+		this.movimientos.getLast().deshacerMovimiento(tbl);
+		this.movimientos.removeLast();
+		this.tbl.setMsg("Has retrocedido un turno");
 	}
 
 }

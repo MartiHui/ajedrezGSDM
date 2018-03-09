@@ -97,11 +97,15 @@ class Peon extends Piezas {
 
 	@Override
 	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
-		if (this.firstMove) this.firstMove = false;
+		if (this.firstMove) {
+			this.firstMove = false;
+			mActual.isFirstMove = true;
+		}
 		
 		if (Math.abs(mActual.cOrigen.distanceCasilla(mActual.cDestino).coorX) == 1 &&  //Si se ha movido en diagonal
 				Math.abs(mActual.cOrigen.distanceCasilla(mActual.cDestino).coorY) == 1 &&
 				tablero.getCasilla(mActual.cDestino) == null) { //Se ha movido en diagonal a pesar de que no hay pieza rival
+				mActual.pDestino = tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY));
 			if (this.isWhite) {
 				tablero.piezasNegrasMuertas.add(tablero.getCasilla(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY)));
 			} else {
@@ -210,7 +214,10 @@ class Torre extends Piezas {
 	
 	@Override
 	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
-		if (this.originalPosition) this.originalPosition = false;
+		if (this.originalPosition) {
+			this.originalPosition = false;
+			mActual.isFirstMove = true;
+		}
 		super.moverPieza(tablero, destino, mActual);
 	}
 }
@@ -500,7 +507,10 @@ class Rey extends Piezas {
 	
 	@Override
 	public void moverPieza(Tablero tablero, Coordenadas destino, Movimiento mActual) {
-		if (this.originalPosition) this.originalPosition = false;
+		if (this.originalPosition) {
+			this.originalPosition = false;
+			mActual.isFirstMove = true;
+		}
 		 //Si el rey se ha movido dos casillas tiene que ser por enroque
 		if (this.posicion.distanceCasilla(destino).coorX == 2) { //Dos casillas a la derecha
 			tablero.movePieza(new Coordenadas(7, this.posicion.coorY), new Coordenadas(5, this.posicion.coorY));
