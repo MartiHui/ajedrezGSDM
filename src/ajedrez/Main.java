@@ -55,6 +55,18 @@ public class Main {
 		System.out.println("Programa cerrado.");
 	}
 	
+	public static int selectOpc(Scanner sc, int min, int max) {
+		do {
+			try {
+				int opc = Integer.parseInt(sc.nextLine());
+				if (opc < min || opc > max) throw new Exception();
+				return opc;
+			} catch (Exception e) {
+				System.out.println("Opción no disponible");
+			}
+		} while (true);
+	}
+	
 	public static int introduccion(Scanner sc) {
 		System.out.println("-----------AJEDREZ-----------"
 				+ "\n 1 - Nueva partida"
@@ -64,63 +76,42 @@ public class Main {
 				+ "\n"
 				+ "\n 0 - Salir");
 		
-		int opc = -1;
-		try {
-			opc = Integer.parseInt(sc.nextLine());
-			if (opc < 0 || opc > 4) throw new Exception();
-		} catch (Exception e) {
-			System.out.println("Opción no disponible");
-		}
-		
-		return opc;
+		return selectOpc(sc, 0, 4);
 	}
 	
 	public static void crearPartida(Scanner sc, ListaPartidas lp) {
 		Partida p = new Partida(sc);
 		lp.partidasActivas.add(p);
-		p.jugar(sc);
-		salirPartida(p, lp);
+		jugarPartida(p, lp, sc);
 	}
 	
 	public static void borrarPartida(Scanner sc, ListaPartidas lp) {
-		int opc = -2;
 		
 		lp.mostrarPartidasActivas();
 		if (lp.partidasActivas.size() == 0) return;
 		
 		System.out.println("\nElige que partida borrar (elige 0 para no volver atrás): ");
-		do {
-			try {
-				opc = Integer.parseInt(sc.nextLine()) - 1;
-				if (opc < -1 || opc > lp.partidasActivas.size()) throw new Exception();
-			} catch (Exception e) {
-				System.out.println("Opción no disponible.");
-			}
-		} while (opc < -1 || opc > lp.partidasActivas.size());
+		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
 		
 		if (opc != -1) lp.partidasActivas.remove(opc); 
 	}
 	
 	public static void elegirPartida(Scanner sc, ListaPartidas lp) {
-		int opc = -2;
-		Partida p;
+		
 		
 		lp.mostrarPartidasActivas();
 		if (lp.partidasActivas.size() == 0) return;
 		
 		System.out.println("\nElige que partida cargar (elige 0 para no volver atrás): ");
-		do {
-			try {
-				opc = Integer.parseInt(sc.nextLine()) - 1;
-				if (opc < -1 || opc > lp.partidasActivas.size()) throw new Exception();
-			} catch (Exception e) {
-				System.out.println("Opción no disponible.");
-			}
-		} while (opc < -1 || opc > lp.partidasActivas.size());
+		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
 		
 		if (opc == -1) return;
 		
-		p = lp.partidasActivas.get(opc);
+		Partida p = lp.partidasActivas.get(opc);
+		jugarPartida(p, lp, sc);
+	}
+	
+	public static void jugarPartida(Partida p, ListaPartidas lp, Scanner sc) {
 		p.jugar(sc);
 		salirPartida(p, lp);
 	}

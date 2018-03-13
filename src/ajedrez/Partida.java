@@ -33,13 +33,13 @@ public class Partida implements Serializable{
 	}
 	
 	public void jugar(Scanner sc) {
-		boolean moved, empate;
 		
 		if (this.gameStatus == 2) this.gameStatus = 1;
 		
 		do {
 			if (this.ctrl.isWhiteTurn) this.numRondas++;
 			
+			boolean moved;
 			do {
 				this.tbl.printTablero(this.ctrl.isWhiteTurn);
 				moved = this.ctrl.moverPieza(sc, movimientos);
@@ -49,8 +49,7 @@ public class Partida implements Serializable{
 					case 0:
 						break;
 					case 1:
-						empate = aceptarEmpate(sc);
-						if (empate) {
+						if (aceptarEmpate(sc)) {
 							this.tbl.setMsg("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
 							this.gameStatus = 0;
 							moved = true;
@@ -153,16 +152,16 @@ public class Partida implements Serializable{
 	
 	public String estadoPartida() {
 		String estado = this.tbl.p1 + " VS " + this.tbl.p2;
-		if (this.gameStatus == 1) {
-			return (estado + "  |  Ronda n�" + this.numRondas + ".");
-		} else if (this.gameStatus == 0) {
-			return (estado + "  | EMPATE tras " + this.numRondas + " rondas.");
+		if (this.gameStatus == 0) {
+			estado += "  | EMPATE tras ";
 		} else if (this.gameStatus == -1) {
-			return (estado + "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
-					" tras " + this.numRondas + " rondas.");
+			estado += "  | VICTORIA de " + (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) +
+					" tras ";
 		} else {
-			return (estado + "  | Partida en curso. Ronda n�" + this.numRondas + " rondas.");
+			estado += "  | Partida en curso. Han pasado ";
 		}
+		
+		return estado + this.numRondas + " rondas."; 
 	}
 	
 	public void retrocederTurno() {

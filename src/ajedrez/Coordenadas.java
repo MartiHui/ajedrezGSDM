@@ -26,16 +26,15 @@ public class Coordenadas implements Serializable {
 	}
 	
 	public void getCoordenadas(Scanner sc) {
-		String input;
 		
 		do {
 			try {
-				input = sc.nextLine();
+				String input = sc.nextLine();
 				
 				if (input.length() == 0) {
 					this.coorX = -1;
 					this.coorY = -1;
-					break;
+					return;
 				}
 				
 				if (input.length() != 2) throw new Exception();
@@ -45,7 +44,7 @@ public class Coordenadas implements Serializable {
 				
 				if (0 > this.coorX || this.coorX > 7 || 0 > this.coorY || this.coorY > 7) throw new Exception();
 				
-				break;
+				return;
 			} catch (Exception e) {
 				System.out.println("Formato incorrecto.");
 			}
@@ -83,8 +82,7 @@ public class Coordenadas implements Serializable {
 	}
 	
 	public void setCoords(Coordenadas c) {
-		this.coorX = c.coorX;
-		this.coorY = c.coorY;
+		this.setCoords(c.coorX, c.coorY);
 	}
 	
 	public String toString() {

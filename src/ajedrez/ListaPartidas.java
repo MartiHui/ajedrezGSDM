@@ -12,7 +12,7 @@ public class ListaPartidas implements Serializable{
 	 * 
 	 */
 	public LinkedList<Partida> partidasActivas;
-	private LinkedList<Partida> partidasAcabadas;
+	public LinkedList<Partida> partidasAcabadas;
 	
 	public ListaPartidas() {
 		this.partidasActivas = new LinkedList<Partida>();

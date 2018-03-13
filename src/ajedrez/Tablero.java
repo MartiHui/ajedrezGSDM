@@ -69,8 +69,7 @@ public class Tablero implements Serializable{
 			System.out.print((coorY+1) + " |");
 			for (int coorX : filas) {
 				coord.setCoords(coorX,  coorY);
-				specialSquare = 
-						legalMoves!=null?coord.insideOf(legalMoves):false; //legalMoves null -> siempre false
+				specialSquare = coord.insideOf(legalMoves); //legalMoves null -> siempre false
 				if (this.getCasilla(coord) == null) {
 					System.out.print(specialSquare?" X ":"   ");
 				} else {
@@ -158,7 +157,7 @@ public class Tablero implements Serializable{
 	}
 	
 	public void printTablero(boolean isWhiteTurn) {
-		printTablero(null, isWhiteTurn);
+		printTablero(new Coordenadas[] {new Coordenadas(-1, -1)}, isWhiteTurn);
 	}
 	
 	public void setMsg(String str) {
@@ -200,11 +199,10 @@ public class Tablero implements Serializable{
 	public boolean possibleCheck(boolean isWhiteKing, Coordenadas org, Coordenadas dst) {
 		Piezas origen = this.getCasilla(org);
 		Piezas destino = this.getCasilla(dst);
-		boolean isCheck;
 		
 		this.setCasilla(org, null);
 		this.setCasilla(dst, origen);
-		isCheck = this.isCheck(isWhiteKing);
+		boolean isCheck = this.isCheck(isWhiteKing);
 		this.setCasilla(org, origen);
 		this.setCasilla(dst, destino);
 		
@@ -249,9 +247,10 @@ public class Tablero implements Serializable{
 			//Como tenemos solo 3 piezas, dos de ellas tienen que ser necesariamente los dos reyes
 			//Por lo que solo tenemos que ver si entre las tres piezas hay un alfil o un caballo, da igual el color
 			for (Coordenadas c: piezas) {
-				if (!((this.getCasilla(c) instanceof Alfil) 
-						|| (this.getCasilla(c) instanceof Caballo)
-						|| (this.getCasilla(c) instanceof Rey))) return 1; //Si la pieza es diferente de alfil, caballo y rey
+				Piezas pTemp = this.getCasilla(c);
+				if (!((pTemp instanceof Alfil) 
+						|| (pTemp instanceof Caballo)
+						|| (pTemp instanceof Rey))) return 1; //Si la pieza es diferente de alfil, caballo y rey
 			}
 		}
 		this.setMsg("No hay suficientes piezas para lograr un jaquemate.");

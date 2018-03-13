@@ -39,18 +39,19 @@ public class Movimiento implements Serializable{
 	
 	public void deshacerMovimiento(Tablero tbl) {
 		if (this.isCastling()) {
+			Coordenadas org;
+			Coordenadas dst;
+			
 			if (cDestino.coorX == 2) {
-				tbl.setCasilla(new Coordenadas(0, this.cOrigen.coorY),
-						tbl.getCasilla(new Coordenadas(3, this.cOrigen.coorY)));
-				tbl.setCasilla(new Coordenadas(3, this.cOrigen.coorY), null);
-				tbl.getCasilla(new Coordenadas(0, this.cOrigen.coorY)).posicion = new Coordenadas(0, this.cOrigen.coorY);
+				org = new Coordenadas(3, this.cOrigen.coorY);
+				dst = new Coordenadas(0, this.cOrigen.coorY);
+			} else {
+				org = new Coordenadas(5, this.cOrigen.coorY);
+				dst = new Coordenadas(7, this.cOrigen.coorY);
 			}
-			if (cDestino.coorX == 6) {
-				tbl.setCasilla(new Coordenadas(7, this.cOrigen.coorY),
-						tbl.getCasilla(new Coordenadas(5, this.cOrigen.coorY)));
-				tbl.setCasilla(new Coordenadas(5, this.cOrigen.coorY), null);
-				tbl.getCasilla(new Coordenadas(7, this.cOrigen.coorY)).posicion = new Coordenadas(7, this.cOrigen.coorY);
-			}
+			tbl.setCasilla(dst, tbl.getCasilla(org));
+			tbl.setCasilla(org, null);
+			tbl.getCasilla(dst).posicion = dst;
 		}
 		
 		if (isPawnPromotion()) {
@@ -59,17 +60,16 @@ public class Movimiento implements Serializable{
 		
 		if (isEnPassant()) {
 			tbl.setCasilla(this.pDestino.posicion, this.pDestino);
-			if (this.pDestino != null) {
-				if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
-				else tbl.piezasNegrasMuertas.remove(this.pDestino);
-			}
+			
+			this.revivePieza(tbl);
+			
 			this.pDestino = null;
 		}
 		
 		if (this.isFirstMove) {
 			if (this.pOrigen instanceof Peon) {
 				Peon p = (Peon) this.pOrigen;
-				p.firstMove = true;
+				p.originalPosition = true;
 			} else if (this.pOrigen instanceof Torre) {
 				Torre t = (Torre) this.pOrigen;
 				t.originalPosition = true;
@@ -80,14 +80,18 @@ public class Movimiento implements Serializable{
 		}
 		
 		if (this.pDestino != null) {
-			if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
-			else tbl.piezasNegrasMuertas.remove(this.pDestino);
+			this.revivePieza(tbl);
 		}
 		
 		tbl.setCasilla(cOrigen, pOrigen);
 		this.pOrigen.posicion = this.cOrigen;
 		tbl.setCasilla(cDestino, pDestino);
 		if (this.pDestino != null) this.pDestino.posicion = this.cDestino;
+	}
+	
+	public void revivePieza(Tablero tbl) {
+		if (this.pDestino.isWhite) tbl.piezasBlancasMuertas.remove(this.pDestino);
+		else tbl.piezasNegrasMuertas.remove(this.pDestino);
 	}
 	
 	public String toString() {
