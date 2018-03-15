@@ -9,14 +9,11 @@ public class Partida implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 5416013799361183948L;
-	/**
-	 * 
-	 */
-	Controles ctrl;
+	Controles ctrl; 
 	Tablero tbl;
-	int gameStatus; //2:pausado 1: jugar 0:empate -1:derrota
+	int gameStatus; // 2:pausado 1:jugando 0:empate -1:derrota
 	int numRondas;
-	LinkedList<Movimiento> movimientos;
+	LinkedList<Movimiento> movimientos; // Guarda odos los movimientos que se van realizando
 	
 	public Partida(Scanner sc) {
 		System.out.println("Set blanco. Nombre del jugador: ");
@@ -29,71 +26,92 @@ public class Partida implements Serializable{
 		this.gameStatus = 1;
 		this.numRondas = 0;
 		this.movimientos = new LinkedList<Movimiento>();
+		// Añadimos un primer elemento a la lista para evitar excepciones
 		this.movimientos.add(null);
 	}
 	
 	public void jugar(Scanner sc) {
-		
-		if (this.gameStatus == 2) this.gameStatus = 1;
+		// Si la partida estaba pausada, se actualiza el status a jugando
+		if (this.gameStatus == 2) 
+			this.gameStatus = 1;
 		
 		do {
-			if (this.ctrl.isWhiteTurn) this.numRondas++;
+			if (this.ctrl.isWhiteTurn) 
+				this.numRondas++;
 			
-			boolean moved;
+			boolean continueGame;
 			do {
 				this.tbl.printTablero(this.ctrl.isWhiteTurn);
-				moved = this.ctrl.moverPieza(sc, movimientos);
+				continueGame = this.ctrl.moverPieza(sc, movimientos);
 				
-				if (!moved) {
+				// Si no ha elegido una pieza, abre el menú
+				if (!continueGame) {
 					switch (menuJugador(sc)) {
-					case 0:
-						break;
-					case 1:
-						if (aceptarEmpate(sc)) {
-							this.tbl.setMsg("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
-							this.gameStatus = 0;
-							moved = true;
-						} else this.tbl.setMsg("Empate denegado.");
-						break;
-					case 2:
-						moved = true;
-						this.tbl.setMsg((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " SE HA RENDIDO");
-						this.ctrl.changeTurn(); //Si te rindes, gana el otro jugador
-						this.gameStatus = -1;
-						break;
-					case 3:
-						System.out.println("\nPara elegir una pieza o casilla, escribe las coordenadas,"
-								+ "\nprimero la letra y luego el n�mero; por ejemplo, A1."
-								+ "\nLa partida finalizar� autom�ticamente en caso de jaquemate o"
-								+ "\nde empate. El empate puede ser porque las piezas disponibles"
-								+ "\nhacen imposible el jaquemate a ambos jugadores o un jugador"
-								+ "\nno dispone de movimientos posibles."
-								+ "\n\nEnter para continuar...");
-						sc.nextLine();
-						break;
-					case 4:
-						if (movimientos.size() >= 3) retrocederTurno();
-						else this.tbl.setMsg("No se puede retroceder");
-						break;
-					case 5:
-						moved = true;
-						this.gameStatus = 2;
-						break;
+						case 0: // Salir del menu
+							break;
+							
+						case 1: // Pide un empate al oponente
+							if (aceptarEmpate(sc)) {
+								this.tbl.setMsg("~~~~~~~~~~~~EMPATE PACTADO~~~~~~~~~~~~");
+								this.gameStatus = 0;
+								continueGame = true;
+							} else 
+								this.tbl.setMsg("Empate denegado.");
+							
+							break;
+						
+						case 2: // El jugador se rinde
+							continueGame = true;
+							this.tbl.setMsg((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) 
+									+ " SE HA RENDIDO");
+							this.ctrl.changeTurn(); // Si te rindes, gana el otro jugador
+							this.gameStatus = -1;
+							
+							break;
+						
+						case 3: // Muestra las instrucciones de como jugar
+							System.out.println("\nPara elegir una pieza o casilla, escribe las coordenadas,"
+									+ "\nprimero la letra y luego el n�mero; por ejemplo, A1."
+									+ "\nLa partida finalizar� autom�ticamente en caso de jaquemate o"
+									+ "\nde empate. El empate puede ser porque las piezas disponibles"
+									+ "\nhacen imposible el jaquemate a ambos jugadores o un jugador"
+									+ "\nno dispone de movimientos posibles."
+									+ "\n\nEnter para continuar...");
+							sc.nextLine();
+							
+							break;
+						
+						case 4: // Retoceder hasta el turno anterior del jugador
+							if (movimientos.size() >= 3) 
+								retrocederTurno();
+							else // Si es el primer turno del jugador en toda la partida
+								this.tbl.setMsg("No se puede retroceder");
+							
+							break;
+						
+						case 5: // Sale de la partida aunque no sea empate o jaquemate
+							continueGame = true;
+							this.gameStatus = 2;
+							
+							break;
 					}
 				} 
-			} while (!moved);
-			//Si ha movido pieza en vez de rendirse o empatar
-			if (this.gameStatus == 1) {
-				//Se actuaiza el estado del juego y tiene que ser -1, 0 o 1
-				this.gameStatus = this.tbl.refreshGameStatus(!this.ctrl.isWhiteTurn, this.movimientos.getLast()); 
+			} while (!continueGame);
+			
+			if (this.gameStatus == 1) { // Ni se han rendido, empatado o salido de partida
+				// Actualizamos el estado según el movimento realizado por el jugador
+				this.gameStatus = this.tbl.refreshGameStatus
+						(!this.ctrl.isWhiteTurn, this.movimientos.getLast()); 
 				
 				if (this.gameStatus == -1) {
 					this.tbl.setMsg("~~~~~~~~~~~~~~[JAQUEMATE]~~~~~~~~~~~~~~");
 				} else if (this.gameStatus == 0) {
-					
+					// No hacemos nada. El caso de empate se  maneja en el tablero
 				} else {
 					if (this.tbl.isCheck(!this.ctrl.isWhiteTurn)) 
-						this.tbl.setMsg("El rey " + (this.ctrl.isWhiteTurn?" negro ":" blanco ") + " esta en jaque.");
+						this.tbl.setMsg("El rey " + (this.ctrl.isWhiteTurn?" negro ":" blanco ") 
+							+ " esta en jaque.");
+					
 					this.ctrl.changeTurn();
 				}
 			}
@@ -111,7 +129,8 @@ public class Partida implements Serializable{
 					+ "\n------------------------------------");
 		}
 			
-		if (this.gameStatus != 2) System.out.println("Partida acabada. N�mero de rondas:" + this.numRondas);
+		if (this.gameStatus != 2) 
+			System.out.println("Partida acabada. N�mero de rondas:" + this.numRondas);
 	}
 	
 	public int menuJugador(Scanner sc) {
@@ -128,7 +147,8 @@ public class Partida implements Serializable{
 			
 			try {
 				opc = Integer.parseInt(sc.nextLine());
-				if (opc < 0 || opc > 5) throw new Exception();
+				if (opc < 0 || opc > 5) 
+					throw new Exception();
 			} catch (Exception e) {
 				System.out.println();
 			}
@@ -138,11 +158,14 @@ public class Partida implements Serializable{
 	}
 	
 	public boolean aceptarEmpate(Scanner sc) {
-		System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " ha solicitado un empate. �Aceptas? (Y/N)");
+		System.out.println((this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) 
+				+ " ha solicitado un empate. �Aceptas? (Y/N)");
 		String opc;
+		
 		do {
-			opc = sc.nextLine();
+			opc = sc.nextLine(); // Solo esta permitido responder y o n
 		} while (!opc.equalsIgnoreCase("Y") && !opc.equalsIgnoreCase("N"));
+		
 		return opc.equalsIgnoreCase("Y");
 	}
 	
@@ -164,12 +187,19 @@ public class Partida implements Serializable{
 		return estado + this.numRondas + " rondas."; 
 	}
 	
+	/*
+	 * Si queremos volver al turno anterior del jugador tenemos que deshacer dos movimientos:
+	 * el anterior del oponente y el que hizo el jugador en su turno anterior
+	 */
 	public void retrocederTurno() {
 		this.numRondas--;
+		
 		this.movimientos.getLast().deshacerMovimiento(tbl);
 		this.movimientos.removeLast();
+		
 		this.movimientos.getLast().deshacerMovimiento(tbl);
 		this.movimientos.removeLast();
+		
 		this.tbl.setMsg("Has retrocedido un turno");
 	}
 

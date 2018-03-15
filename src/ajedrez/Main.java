@@ -25,28 +25,28 @@ public class Main {
 		
 		do {
 			switch (introduccion(sc)) {
-			case 0:
-				salir = true;
-				break;
-				
-			case 1:
-				crearPartida(sc, lp);
-				break;
-				
-			case 2:
-				elegirPartida(sc, lp);
-				break;
-				
-			case 3:
-				borrarPartida(sc, lp);
-				break;
-				
-			case 4:
-				lp.mostrarPartidasAcabadas();
-				break;
-				
-			default:
-				break;
+				case 0:
+					salir = true;
+					break;
+					
+				case 1:
+					crearPartida(sc, lp);
+					break;
+					
+				case 2:
+					elegirPartida(sc, lp);
+					break;
+					
+				case 3:
+					borrarPartida(sc, lp);
+					break;
+					
+				case 4:
+					lp.mostrarPartidasAcabadas();
+					break;
+					
+				default:
+					break;
 			}
 		} while (!salir);
 		
@@ -55,6 +55,7 @@ public class Main {
 		System.out.println("Programa cerrado.");
 	}
 	
+	// Método general para cuando tenemos que elegir una opcion
 	public static int selectOpc(Scanner sc, int min, int max) {
 		do {
 			try {
@@ -67,6 +68,7 @@ public class Main {
 		} while (true);
 	}
 	
+	// Menu general
 	public static int introduccion(Scanner sc) {
 		System.out.println("-----------AJEDREZ-----------"
 				+ "\n 1 - Nueva partida"
@@ -79,33 +81,39 @@ public class Main {
 		return selectOpc(sc, 0, 4);
 	}
 	
+	// Crea una nueva partida, la añade a la lista y la empieza automaticamente
 	public static void crearPartida(Scanner sc, ListaPartidas lp) {
 		Partida p = new Partida(sc);
 		lp.partidasActivas.add(p);
 		jugarPartida(p, lp, sc);
 	}
 	
+	// Borramos alguna partida de la lista de partidas activas
 	public static void borrarPartida(Scanner sc, ListaPartidas lp) {
-		
 		lp.mostrarPartidasActivas();
-		if (lp.partidasActivas.size() == 0) return;
+		
+		if (lp.partidasActivas.size() == 0) // No hay ninguna partida que borrar
+			return;
 		
 		System.out.println("\nElige que partida borrar (elige 0 para no volver atrás): ");
 		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
 		
-		if (opc != -1) lp.partidasActivas.remove(opc); 
+		if (opc != -1) 
+			lp.partidasActivas.remove(opc); 
 	}
 	
+	// Cargamos alguna partida activa
 	public static void elegirPartida(Scanner sc, ListaPartidas lp) {
-		
-		
 		lp.mostrarPartidasActivas();
-		if (lp.partidasActivas.size() == 0) return;
+		
+		if (lp.partidasActivas.size() == 0) 
+			return;
 		
 		System.out.println("\nElige que partida cargar (elige 0 para no volver atrás): ");
 		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
 		
-		if (opc == -1) return;
+		if (opc == -1) 
+			return;
 		
 		Partida p = lp.partidasActivas.get(opc);
 		jugarPartida(p, lp, sc);
@@ -116,6 +124,7 @@ public class Main {
 		salirPartida(p, lp);
 	}
 	
+	// Mira si ha salido de partida por empate o jaquemate, o si se puede continuar más tarde
 	public static void salirPartida(Partida p, ListaPartidas lp) {
 		if (p.gameStatus == 2) {
 			System.out.println("Partida guardada");
