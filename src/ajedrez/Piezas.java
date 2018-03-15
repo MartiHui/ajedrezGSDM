@@ -71,13 +71,15 @@ class Peon extends Piezas {
 		
 		// Calcula si puede moverse dos casillas verticalmente
 		cDestino = this.posicion.addCoordenadas(0, this.isWhite?2:-2);
-		pDestino = tablero.getCasilla(cDestino);
-		if (originalPosition // Si la pieza aún no se ha movido en toda la partida
-				&& pDestino == null  // La casilla destino esta vacía
-				// Mover la pieza no provoca una jaquemate al propio jugador
-				&& !tablero.possibleCheck(this.isWhite, this.posicion, cDestino)) 
-			posiciones.add(cDestino);
-		
+		if (cDestino.dentroTablero()) {
+			pDestino = tablero.getCasilla(cDestino);
+			
+			if (originalPosition // Si la pieza aún no se ha movido en toda la partida
+					&& pDestino == null // La casilla destino esta vacía
+					// Mover la pieza no provoca una jaquemate al propio jugador
+					&& !tablero.possibleCheck(this.isWhite, this.posicion, cDestino))
+				posiciones.add(cDestino);
+		}
 		// Movimiento normal de una casilla vertical
 		cDestino = this.posicion.addCoordenadas(0, this.isWhite?1:-1);
 		if (cDestino.dentroTablero()) { // Tiene alguna casilla delante, no se sale del tablero
@@ -124,7 +126,8 @@ class Peon extends Piezas {
 						&& pDestino == mAnterior.pOrigen  // El peon objetivo se acaba de mover
 						// El peon objetivo se ha movido dos casillas verticalmente
 						&& mAnterior.isPawnDoubleMove())  
-					posiciones.add(cDestino);	
+					posiciones.add(this.posicion.addCoordenadas
+							(new Coordenadas(-1, this.isWhite?1:-1)));	
 			}
 			
 			// En-passant a la derecha
@@ -136,7 +139,8 @@ class Peon extends Piezas {
 						&& pDestino.isWhite != this.isWhite  
 						&& pDestino == mAnterior.pOrigen 
 						&& mAnterior.isPawnDoubleMove())
-					posiciones.add(cDestino);
+					posiciones.add(this.posicion.addCoordenadas
+							(new Coordenadas(1, this.isWhite?1:-1)));
 			}
 		}
 		
@@ -160,7 +164,6 @@ class Peon extends Piezas {
 			// Obtenemos el peon que ha muerto debido al en-passant
 			Piezas pDestino = tablero.getCasilla
 					(new Coordenadas(mActual.cDestino.coorX, mActual.cOrigen.coorY));
-			
 			
 			mActual.pDestino = pDestino; // Añadimos la pieza victima al objeto Movimiento
 			
@@ -721,13 +724,24 @@ class Rey extends Piezas {
 		// Si el rey se ha movido dos casillas, tiene que ser por enroque
 		Coordenadas cDestino = this.posicion.distanceCasilla(destino);
 		if (Math.abs(cDestino.coorX) == 2) { 
+			Coordenadas cTorreOrigen;
+			Coordenadas cTorreDestino;
+			Piezas pTorre;
 			if (cDestino.coorX == 2) { // Enroque con la torre derecha. Movemos la torre
-				tablero.movePieza
-				(new Coordenadas(7, this.posicion.coorY), new Coordenadas(5, this.posicion.coorY));
+				cTorreOrigen = new Coordenadas(7, this.posicion.coorY);
+				cTorreDestino = new Coordenadas(5, this.posicion.coorY);
+				pTorre = tablero.getCasilla(cTorreOrigen);
+				
+				tablero.movePieza(cTorreOrigen, cTorreDestino);
+				pTorre.posicion = cTorreDestino;
 			}
 			else { // Enroque con la torre izquierda. Movemos la torre
-				tablero.movePieza
-				(new Coordenadas(0, this.posicion.coorY), new Coordenadas(3, this.posicion.coorY));
+				cTorreOrigen = new Coordenadas(0, this.posicion.coorY);
+				cTorreDestino = new Coordenadas(3, this.posicion.coorY);
+				pTorre = tablero.getCasilla(cTorreOrigen);
+				
+				tablero.movePieza(cTorreOrigen, cTorreDestino);
+				pTorre.posicion = cTorreDestino;
 			} 
 		}
 		

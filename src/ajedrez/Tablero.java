@@ -7,7 +7,7 @@ public class Tablero implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1332063901361324268L;
+	private static final long serialVersionUID = 610455052096483423L;
 	public Piezas[][] tablero; // Información sobre que pieza hay en cada casilla
 	public LinkedList<Piezas> piezasBlancasMuertas; // Lista de piezas blancas muertas
 	public LinkedList<Piezas> piezasNegrasMuertas; // Lo mismo pero con piezas negras
@@ -71,7 +71,7 @@ public class Tablero implements Serializable{
 	 * 
 	 * En caso de que haya algún mensaje por evento, se mostrará bajo el tablero
 	 */
-	public void printTablero(Coordenadas[] legalMoves, boolean isWhiteTurn) {
+	public void printTablero(Coordenadas[] legalMoves, boolean isWhiteTurn, boolean playing) {
 		Coordenadas coord = new Coordenadas(0, 0);
 		// Determina si la casilla está dentro de los posibles movimientos de una pieza en cuestión
 		boolean specialSquare;
@@ -115,7 +115,7 @@ public class Tablero implements Serializable{
 			 */
 			switch (coorY) {
 				case 7:
-					System.out.print((isWhiteTurn?"    ":" -> ") + "Negras: " + this.p2);
+					System.out.print((isWhiteTurn?"    ":" -> ") + "\u265A Negras: " + this.p2);
 					
 					break;
 				
@@ -177,7 +177,7 @@ public class Tablero implements Serializable{
 					break;
 				
 				case 0:
-					System.out.print((isWhiteTurn?" -> ":"    ") + "Blancas: " + this.p1);
+					System.out.print((isWhiteTurn?" -> ":"    ") + "\u2654 Blancas: " + this.p1);
 					
 					break;
 				
@@ -204,7 +204,8 @@ public class Tablero implements Serializable{
 			this.msg = ""; // Reseteamos el mensaje, para que no se repita la proxima vez
 		}
 		
-		System.out.println("------Turno de " + (isWhiteTurn?this.p1:this.p2) + "------");
+		if (playing)
+			System.out.println("------Turno de " + (isWhiteTurn?this.p1:this.p2) + "------");
 	}
 	
 	/*
@@ -212,8 +213,8 @@ public class Tablero implements Serializable{
 	 * al método con un array de Coordenadas que solo contiene un elemento, que apunta a una
 	 * posición fuera del tablero, y el boolean specialSquares siempre será false.
 	 */
-	public void printTablero(boolean isWhiteTurn) {
-		printTablero(new Coordenadas[] {new Coordenadas(-1, -1)}, isWhiteTurn);
+	public void printTablero(boolean isWhiteTurn, boolean playing) {
+		printTablero(new Coordenadas[] {new Coordenadas(-1, -1)}, isWhiteTurn, playing);
 	}
 	
 	public void setMsg(String str) {

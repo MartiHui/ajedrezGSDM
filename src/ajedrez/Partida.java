@@ -41,7 +41,7 @@ public class Partida implements Serializable{
 			
 			boolean continueGame;
 			do {
-				this.tbl.printTablero(this.ctrl.isWhiteTurn);
+				this.tbl.printTablero(this.ctrl.isWhiteTurn, true);
 				continueGame = this.ctrl.moverPieza(sc, movimientos);
 				
 				// Si no ha elegido una pieza, abre el menú
@@ -118,12 +118,12 @@ public class Partida implements Serializable{
 		} while (this.gameStatus == 1);
 		
 		if (this.gameStatus == 0) {
-			this.tbl.printTablero(this.ctrl.isWhiteTurn);
+			this.tbl.printTablero(this.ctrl.isWhiteTurn, false);
 			System.out.println("----------------EMPATE----------------"
 					+ "\nNing�n jugador ha ganado."
 					+ "\n--------------------------------------");
 		} else if (this.gameStatus == -1) {
-			this.tbl.printTablero(this.ctrl.isWhiteTurn);
+			this.tbl.printTablero(this.ctrl.isWhiteTurn, false);
 			System.out.println("--------------VICTORIA--------------\n" 
 					+ (this.ctrl.isWhiteTurn?this.tbl.p1:this.tbl.p2) + " es el ganador"
 					+ "\n------------------------------------");

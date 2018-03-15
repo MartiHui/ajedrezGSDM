@@ -96,7 +96,7 @@ public class Main {
 			return;
 		
 		System.out.println("\nElige que partida borrar (elige 0 para no volver atrás): ");
-		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
+		int opc = selectOpc(sc, -1, lp.partidasActivas.size()) - 1;
 		
 		if (opc != -1) 
 			lp.partidasActivas.remove(opc); 
@@ -110,7 +110,7 @@ public class Main {
 			return;
 		
 		System.out.println("\nElige que partida cargar (elige 0 para no volver atrás): ");
-		int opc = selectOpc(sc, -1, lp.partidasActivas.size());
+		int opc = selectOpc(sc, -1, lp.partidasActivas.size()) - 1;
 		
 		if (opc == -1) 
 			return;

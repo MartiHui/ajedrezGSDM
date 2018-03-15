@@ -60,7 +60,7 @@ public class Controles implements Serializable{
 	 * Esta casilla tiene que estar dentro de los movimientos permitidos de la pieza.
 	 */
 	public Coordenadas elegirDestino(Piezas p, Scanner sc, Movimiento mAnterior) {
-		this.tablero.printTablero(p.legalMoves(this.tablero, mAnterior), isWhiteTurn);
+		this.tablero.printTablero(p.legalMoves(this.tablero, mAnterior), isWhiteTurn, true);
 		System.out.println("Pieza elegida: " + p + " | Elige una casilla:");
 		
 		do {
@@ -85,7 +85,7 @@ public class Controles implements Serializable{
 			Coordenadas dst = this.elegirDestino(this.tablero.getCasilla(org), sc, listaMovimientos.getLast());
 			
 			if (dst == null) 
-				this.tablero.printTablero(isWhiteTurn);
+				this.tablero.printTablero(isWhiteTurn, true);
 			else {
 				Movimiento mActual = new Movimiento
 						(org, dst, this.tablero.getCasilla(org), this.tablero.getCasilla(dst));
