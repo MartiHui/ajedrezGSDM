@@ -80,6 +80,7 @@ class Peon extends Piezas {
 					&& !tablero.possibleCheck(this.isWhite, this.posicion, cDestino))
 				posiciones.add(cDestino);
 		}
+		
 		// Movimiento normal de una casilla vertical
 		cDestino = this.posicion.addCoordenadas(0, this.isWhite?1:-1);
 		if (cDestino.dentroTablero()) { // Tiene alguna casilla delante, no se sale del tablero
@@ -330,7 +331,6 @@ class Torre extends Piezas {
 }
 
 class Caballo extends Piezas {
-	
 	/**
 	 * 
 	 */
@@ -414,7 +414,6 @@ class Caballo extends Piezas {
 }
 	
 class Alfil extends Piezas {
-
 	/**
 	 * 
 	 */
@@ -502,7 +501,6 @@ class Alfil extends Piezas {
 }
 
 class Reina extends Piezas {
-
 	/**
 	 * 
 	 */
